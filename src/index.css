@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: #a3a3a3;
+}
+
+.select:hover > .options {
+  opacity: 1;
+  top: 49px;
+}
+
+.select:hover > .selected .arrow {
+  transform: rotate(0deg);
+}

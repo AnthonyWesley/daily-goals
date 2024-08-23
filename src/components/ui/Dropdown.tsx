@@ -1,0 +1,68 @@
+import { useEffect, useState } from "react";
+
+interface SelectProps extends React.HTMLAttributes<HTMLDivElement> {
+  dropdownSelect: (option: string) => void;
+  dropdownList: string[];
+  subtitle?: string;
+  className?: string;
+}
+
+export default function Dropdown({
+  dropdownSelect,
+  dropdownList,
+  // subtitle,
+  // className,
+}: SelectProps) {
+  // const [isOpen, setIsOpen] = useState(false);
+  const [selectedOption, setSelectedOption] = useState(dropdownList[0]);
+  const handleOptionClick = (option: string) => {
+    setSelectedOption(option);
+    dropdownSelect(option);
+    // setIsOpen(false);
+  };
+
+  useEffect(() => {
+    setSelectedOption(dropdownList[0]);
+    dropdownSelect(dropdownList[0]);
+  }, []);
+
+  //   const toggleDropdown = () => {
+  //     setIsOpen(!isOpen);
+  //   };
+  const selectedLabel =
+    dropdownList.find((option) => option === selectedOption) || "Metas";
+
+  return (
+    <div className="select relative w-40 cursor-pointer text-base text-white duration-500">
+      <div className="selected relative z-20 flex items-center justify-between rounded-md bg-[#2a2f3b] p-2">
+        <span className="ml-2">{selectedLabel}</span>
+        <svg
+          className={`arrow -rotate-90 duration-500`}
+          xmlns="http://www.w3.org/2000/svg"
+          width="30"
+          height="30"
+          viewBox="0 0 24 24"
+        >
+          <path
+            fill="currentColor"
+            d="m12 10.8l-3.9 3.9q-.275.275-.7.275t-.7-.275q-.275-.275-.275-.7t.275-.7l4.6-4.6q.3-.3.7-.3t.7.3l4.6 4.6q.275.275.275.7t-.275.7q-.275.275-.7.275t-.7-.275z"
+          />
+        </svg>
+      </div>
+
+      <div className="options absolute top-0 flex w-40 flex-col rounded-md bg-[#2a2f3b] p-2 opacity-0 duration-500">
+        <div className={``}>
+          {dropdownList?.map((option, index) => (
+            <div
+              key={index}
+              className={`rounded-sm p-2 ${selectedOption === option ? "bg-gray-600" : ""}`}
+              onClick={() => handleOptionClick(option)}
+            >
+              {option}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
