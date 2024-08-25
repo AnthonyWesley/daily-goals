@@ -22,7 +22,6 @@ const instance = axios.create({
 export class GoalApi {
   async getUserIp(): Promise<string> {
     try {
-      await axios.get("https://api-test-omega-one.vercel.app/user");
       const response = await axios.get("https://api.ipify.org?format=json");
       if (response.status !== 200) {
         throw new Error("Failed to fetch user IP");
