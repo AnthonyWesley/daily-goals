@@ -31,7 +31,6 @@ export default function GoalsList({ goals }: { goals: IGoal[] }) {
   const handleMonthlyGoalChange = (goal: IGoal, newValue: number) => {
     setUpdatedGoal({ ...goal, monthlyGoal: newValue });
   };
-  console.log(updatedGoal);
 
   const calculateTotalSales = dailySales.reduce(
     (sum, item) => sum + item.sales,

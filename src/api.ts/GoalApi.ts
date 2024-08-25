@@ -16,14 +16,16 @@ export interface IGoalUpdate {
 }
 
 const instance = axios.create({
-  baseURL: "http://localhost:3000/goal",
+  baseURL: "https://api-test-omega-one.vercel.app/goal",
   headers: { "X-Custom-Header": "foobar" },
 });
 
 export class GoalApi {
   async getUserIp(): Promise<any> {
     try {
-      const response = await axios.get("http://localhost:3000/user/");
+      const response = await axios.get(
+        "https://api-test-omega-one.vercel.app/user",
+      );
 
       if (response.status !== 200) {
         throw new Error("Failed to fetch user");
