@@ -6,7 +6,6 @@ export interface IGoal {
   monthlyGoal: number;
   workingDays: number;
   userIp?: string;
-  // daySales?: DaySales[];
 }
 
 export interface IGoalUpdate {
@@ -16,30 +15,34 @@ export interface IGoalUpdate {
 }
 
 const instance = axios.create({
-  baseURL: "https://api-test-omega-one.vercel.app/goal",
+  baseURL: "http://localhost:3001/goal",
   headers: { "X-Custom-Header": "foobar" },
 });
 
 export class GoalApi {
   async getUserIp(): Promise<string> {
     try {
+      await axios.get("http://localhost:3001/user");
       const response = await axios.get("https://api.ipify.org?format=json");
-
       if (response.status !== 200) {
         throw new Error("Failed to fetch user IP");
       }
-
       return response.data.ip;
     } catch (error) {
       console.error("Error fetching user IP:", error);
       throw error;
     }
   }
+
+  // Listar metas
   async list(): Promise<IGoal[]> {
     try {
-      const response = await instance.get("/");
+      const userIp = await this.getUserIp();
+      const response = await instance.get("/", {
+        headers: { "X-User-IP": userIp },
+      });
       if (response.status !== 200) {
-        throw new Error("Failed to fetch goal");
+        throw new Error("Failed to fetch goals");
       }
       return response.data;
     } catch (error) {
@@ -50,7 +53,10 @@ export class GoalApi {
 
   async write(goal: IGoal): Promise<IGoal> {
     try {
-      const response = await instance.post("/write", goal);
+      const userIp = await this.getUserIp();
+      const response = await instance.post("/write", goal, {
+        headers: { "X-User-IP": userIp },
+      });
       if (response.status !== 201) {
         throw new Error("Failed to create goal");
       }
@@ -63,7 +69,10 @@ export class GoalApi {
 
   async delete(id: string): Promise<IGoal> {
     try {
-      const response = await instance.delete(`/${id}/delete`);
+      const userIp = await this.getUserIp();
+      const response = await instance.delete(`/${id}/delete`, {
+        headers: { "X-User-IP": userIp },
+      });
       if (response.status !== 204) {
         throw new Error("Failed to delete goal");
       }
@@ -76,7 +85,10 @@ export class GoalApi {
 
   async update(id: string, goal: IGoal): Promise<IGoal> {
     try {
-      const response = await instance.put(`/${id}/change`, goal);
+      const userIp = await this.getUserIp();
+      const response = await instance.put(`/${id}/change`, goal, {
+        headers: { "X-User-IP": userIp },
+      });
       if (response.status !== 200) {
         throw new Error("Failed to update goal");
       }

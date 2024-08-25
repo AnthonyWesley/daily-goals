@@ -48,8 +48,6 @@ export default function GoalApiProvider({
     }
   };
   const updateGoal = async (id: string, goal: IGoal) => {
-    console.log(goal);
-
     const data = await goalApi.update(id, goal);
     if (data) {
       getAllGoals();
