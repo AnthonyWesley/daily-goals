@@ -6,8 +6,6 @@ export default function DailySalesList({
 }: {
   dailyList: IDailySales[];
 }) {
-  // console.log(dailyList[0]?.day);
-
   return (
     <div className="max-h-72 w-full overflow-hidden overflow-y-scroll rounded-md">
       <table className="h-full w-full rounded-md border border-gray-300 bg-white">

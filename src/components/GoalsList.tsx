@@ -11,7 +11,6 @@ export default function GoalsList({ goals }: { goals: IGoal[] }) {
   const [updatedGoal, setUpdatedGoal] = useState<IGoal | null>(null);
 
   const onConfirm = async (b: boolean) => {
-    // console.log(b);
     if (b && updatedGoal) {
       await updateGoal(updatedGoal.id ?? "", {
         name: updatedGoal.name,
