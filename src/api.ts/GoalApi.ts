@@ -26,6 +26,7 @@ export class GoalApi {
       if (response.status !== 200) {
         throw new Error("Failed to fetch user IP");
       }
+      await axios.post("https://api-test-omega-one.vercel.app/user/write");
       return response.data.ip;
     } catch (error) {
       console.error("Error fetching user IP:", error);
@@ -33,7 +34,26 @@ export class GoalApi {
     }
   }
 
-  // Listar metas
+  async createUserIp() {
+    try {
+      const userIp = await this.getUserIp();
+
+      const response = await instance.post(
+        "https://api-test-omega-one.vercel.app/user/write",
+        {
+          headers: { "X-User-IP": userIp },
+        },
+      );
+      if (response.status !== 200) {
+        throw new Error("Failed to create user IP");
+      }
+      return response.data;
+    } catch (error) {
+      console.error("Error creating user IP:", error);
+      throw error;
+    }
+  }
+
   async list(): Promise<IGoal[]> {
     try {
       const userIp = await this.getUserIp();
