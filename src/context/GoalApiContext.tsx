@@ -24,7 +24,7 @@ export default function GoalApiProvider({
   const getUserIp = async () => {
     const data = await goalApi.getUserIp();
     if (data) {
-      setIp(data[0]?.ip);
+      setIp(data);
     }
   };
   const getAllGoals = async () => {
@@ -60,7 +60,6 @@ export default function GoalApiProvider({
     getUserIp();
     getAllGoals();
   }, []);
-  console.log(ip);
   return (
     <GoalApiContext.Provider
       value={{
