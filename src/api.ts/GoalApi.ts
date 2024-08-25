@@ -15,14 +15,14 @@ export interface IGoalUpdate {
 }
 
 const instance = axios.create({
-  baseURL: "http://localhost:3001/goal",
+  baseURL: "https://api-test-omega-one.vercel.app/goal",
   headers: { "X-Custom-Header": "foobar" },
 });
 
 export class GoalApi {
   async getUserIp(): Promise<string> {
     try {
-      await axios.get("http://localhost:3001/user");
+      await axios.get("https://api-test-omega-one.vercel.app/user");
       const response = await axios.get("https://api.ipify.org?format=json");
       if (response.status !== 200) {
         throw new Error("Failed to fetch user IP");
