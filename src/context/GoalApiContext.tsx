@@ -60,7 +60,7 @@ export default function GoalApiProvider({
     getUserIp();
     getAllGoals();
   }, []);
-
+  console.log(ip);
   return (
     <GoalApiContext.Provider
       value={{

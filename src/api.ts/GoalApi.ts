@@ -30,7 +30,6 @@ export class GoalApi {
       if (response.status !== 200) {
         throw new Error("Failed to fetch user");
       }
-      console.log(response.data);
 
       return response.data;
     } catch (error) {
