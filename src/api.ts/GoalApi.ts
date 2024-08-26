@@ -23,10 +23,10 @@ export class GoalApi {
   async getUserIp(): Promise<string> {
     try {
       const response = await axios.get("https://api.ipify.org?format=json");
+
       if (response.status !== 200) {
         throw new Error("Failed to fetch user IP");
       }
-      await axios.post("https://api-test-omega-one.vercel.app/user/write");
       return response.data.ip;
     } catch (error) {
       console.error("Error fetching user IP:", error);

@@ -5,13 +5,13 @@ import DailySalesList from "./DailySalesList";
 import { useDailySalesContext } from "../context/DailySalesContext";
 import { IGoal } from "../api.ts/GoalApi";
 import { formatISO } from "date-fns";
-import { IDailySales } from "../api.ts/DailySalesApi";
 
 export default function DailySalesArea({ goals }: { goals: IGoal[] }) {
   const [sales, setSales] = useState("");
 
-  const [dailyList, setDailyList] = useState<IDailySales[]>([]);
-  const { createDaySales, getAllDailySales } = useDailySalesContext();
+  // const [dailyList, setDailyList] = useState<IDailySales[]>([]);
+  const { createDaySales, getAllDailySales, dailySales } =
+    useDailySalesContext();
 
   const handleSalesChange = (value: string) => {
     setSales(autoCurrency(value.replace(/[^\d]/g, "")));
@@ -26,18 +26,14 @@ export default function DailySalesArea({ goals }: { goals: IGoal[] }) {
         sales: saleAmount,
         goalId: id,
       });
-      const updatedList = await getAllDailySales(id);
-      setDailyList(updatedList);
-      setSales("");
     }
+    await getAllDailySales(id);
   };
 
   useEffect(() => {
     const getList = async () => {
-      const response = await getAllDailySales(goals[0]?.id ?? "");
-
-      if (response) {
-        setDailyList(response);
+      if (goals.length > 0) {
+        await getAllDailySales(goals[0]?.id ?? "");
       }
     };
     getList();
@@ -59,7 +55,7 @@ export default function DailySalesArea({ goals }: { goals: IGoal[] }) {
           Adicionar Venda
         </button>
       </div>
-      <DailySalesList dailyList={dailyList} />
+      <DailySalesList dailyList={dailySales} />
     </div>
   ));
 }

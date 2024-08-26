@@ -30,6 +30,9 @@ export default function GoalsArea({ goals }: { goals: IGoal[] }) {
         monthlyGoal: toNumber(monthlyGoal),
         workingDays: toNumber(workingDays),
       });
+      setMonthlyGoal("");
+      setWorkingDays("");
+      setName("");
     }
   };
 

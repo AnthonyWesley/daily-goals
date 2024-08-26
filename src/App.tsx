@@ -7,7 +7,7 @@ import { useGoalApiContext } from "./context/GoalApiContext";
 
 export default function App() {
   const [selectedGoals, setSelectedGoals] = useState<IGoal[]>([]);
-  const { goals, ip } = useGoalApiContext();
+  const { goals } = useGoalApiContext();
 
   const dropdownSelect = (option: string) => {
     const aGoal = goals?.filter((g) => g.name === option);
@@ -28,7 +28,6 @@ export default function App() {
       <GoalsArea goals={selectedGoals} />
 
       <DailySalesArea goals={selectedGoals} />
-      <p>ip:{ip}</p>
     </div>
   );
 }

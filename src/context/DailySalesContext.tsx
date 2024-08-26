@@ -32,20 +32,20 @@ export default function dailySalesApiProvider({
   const createDaySales = async (goal: IDailySales) => {
     const data = await dailySalesApi.write(goal);
     if (data) {
-      getAllDailySales(goal.goalId);
+      await getAllDailySales(goal.goalId);
     }
   };
 
   const deleteDaySales = async (id: string) => {
     const data = await dailySalesApi.delete(id);
     if (data) {
-      getAllDailySales(id);
+      await getAllDailySales(id);
     }
   };
   const updateDaySales = async (id: string, goal: IDailySales) => {
     const data = await dailySalesApi.update(id, goal);
     if (data) {
-      getAllDailySales(id);
+      await getAllDailySales(id);
     }
   };
 
