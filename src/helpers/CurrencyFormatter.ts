@@ -16,13 +16,16 @@ export const autoCurrency = (value: string) => {
   return value;
 };
 
-export const parseCurrency = (formattedValue: any) => {
-  if (formattedValue) {
+export const parseCurrency = (formattedValue: any): number => {
+  if (typeof formattedValue === "string" && formattedValue) {
     const numericValue = formattedValue.replace(/[^\d,-]/g, "");
-    return parseFloat(numericValue.replace(",", "."));
+    const parsedValue = parseFloat(numericValue.replace(",", "."));
+    return isNaN(parsedValue) ? 0 : parsedValue;
+  } else {
+    return formattedValue;
   }
-  return 0;
 };
+
 export const toNumber = (value: string): number => {
   value = value.trim();
   value = value.replace(/\./g, "").replace(",", ".");

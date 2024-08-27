@@ -1,41 +1,32 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 
 interface SelectProps extends React.HTMLAttributes<HTMLDivElement> {
   dropdownSelect: (option: string) => void;
   dropdownList: string[];
-  subtitle?: string;
-  className?: string;
 }
 
 export default function Dropdown({
   dropdownSelect,
   dropdownList,
-  // subtitle,
-  // className,
 }: SelectProps) {
-  // const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState(dropdownList[0]);
+  const [selectedOption, setSelectedOption] = useState<string>("");
+
+  useEffect(() => {
+    if (dropdownList.length > 0 && selectedOption === "") {
+      setSelectedOption(dropdownList[0]);
+      dropdownSelect(dropdownList[0]);
+    }
+  }, [dropdownList]);
+
   const handleOptionClick = (option: string) => {
     setSelectedOption(option);
     dropdownSelect(option);
-    // setIsOpen(false);
   };
-
-  useEffect(() => {
-    setSelectedOption(dropdownList[0]);
-    dropdownSelect(dropdownList[0]);
-  }, []);
-
-  //   const toggleDropdown = () => {
-  //     setIsOpen(!isOpen);
-  //   };
-  const selectedLabel =
-    dropdownList.find((option) => option === selectedOption) || "Metas";
 
   return (
     <div className="select relative w-40 cursor-pointer text-base text-white duration-500">
       <div className="selected relative z-20 flex items-center justify-between rounded-md bg-[#2a2f3b] p-2">
-        <span className="ml-2">{selectedLabel}</span>
+        <span className="ml-2">{selectedOption}</span>
         <svg
           className={`arrow -rotate-90 duration-500`}
           xmlns="http://www.w3.org/2000/svg"
@@ -51,11 +42,13 @@ export default function Dropdown({
       </div>
 
       <div className="options absolute top-0 flex w-40 flex-col rounded-md bg-[#2a2f3b] p-2 opacity-0 duration-500">
-        <div className={``}>
+        <div>
           {dropdownList?.map((option, index) => (
             <div
               key={index}
-              className={`rounded-sm p-2 ${selectedOption === option ? "bg-gray-600" : ""}`}
+              className={`rounded-sm p-2 ${
+                selectedOption === option ? "bg-gray-600" : ""
+              }`}
               onClick={() => handleOptionClick(option)}
             >
               {option}

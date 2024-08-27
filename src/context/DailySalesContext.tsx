@@ -3,15 +3,15 @@ import { DailySalesApi, IDailySales } from "../api.ts/DailySalesApi";
 
 interface IDailySalesContext {
   dailySales: IDailySales[];
-  getAllDailySales: (id: string) => Promise<IDailySales[]>;
-  createDaySales: (DaySales: IDailySales) => Promise<void>;
-  deleteDaySales: (id: string) => Promise<void>;
-  updateDaySales: (id: string, DaySales: IDailySales) => Promise<void>;
+  getAllDailySales: (goalId: string) => Promise<IDailySales[]>;
+  createDaySales: (daySales: IDailySales) => Promise<void>;
+  deleteDaySales: (id: string, goalId: string) => Promise<void>;
+  updateDaySales: (id: string, daySales: IDailySales) => Promise<void>;
 }
 
 export const DailySalesContext = createContext<IDailySalesContext | null>(null);
 
-export default function dailySalesApiProvider({
+export default function DailySalesApiProvider({
   children,
 }: {
   children: JSX.Element;
@@ -19,33 +19,34 @@ export default function dailySalesApiProvider({
   const dailySalesApi = new DailySalesApi();
   const [dailySales, setDailySales] = useState<IDailySales[]>([]);
 
-  const getAllDailySales = async (id: string) => {
-    const data = await dailySalesApi.list(id);
-    const formattedDailySales = await data.map((todo: IDailySales) => ({
-      ...todo,
-      day: new Date(todo.day),
+  const getAllDailySales = async (goalId: string) => {
+    const data = await dailySalesApi.list(goalId);
+    const formattedDailySales = data.map((sale: IDailySales) => ({
+      ...sale,
+      day: new Date(sale.day),
     }));
     setDailySales(formattedDailySales);
     return formattedDailySales;
   };
 
-  const createDaySales = async (goal: IDailySales) => {
-    const data = await dailySalesApi.write(goal);
+  const createDaySales = async (daySales: IDailySales) => {
+    const data = await dailySalesApi.write(daySales);
     if (data) {
-      await getAllDailySales(goal.goalId);
+      await getAllDailySales(daySales.goalId);
     }
   };
 
-  const deleteDaySales = async (id: string) => {
+  const deleteDaySales = async (id: string, goalId: string) => {
     const data = await dailySalesApi.delete(id);
     if (data) {
-      await getAllDailySales(id);
+      await getAllDailySales(goalId);
     }
   };
-  const updateDaySales = async (id: string, goal: IDailySales) => {
-    const data = await dailySalesApi.update(id, goal);
+
+  const updateDaySales = async (id: string, daySales: IDailySales) => {
+    const data = await dailySalesApi.update(id, daySales);
     if (data) {
-      await getAllDailySales(id);
+      await getAllDailySales(daySales.goalId);
     }
   };
 
@@ -69,7 +70,7 @@ export function useDailySalesContext() {
 
   if (!context)
     throw new Error(
-      "use DailySalesContext must be used within a TaskApiProvider",
+      "useDailySalesContext must be used within a DailySalesApiProvider",
     );
 
   return context;

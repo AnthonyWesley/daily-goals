@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { autoCurrency, toNumber } from "../helpers/CurrencyFormatter";
 import Input from "./ui/Input";
 import DailySalesList from "./DailySalesList";
@@ -26,18 +26,10 @@ export default function DailySalesArea({ goals }: { goals: IGoal[] }) {
         sales: saleAmount,
         goalId: id,
       });
+      setSales("");
     }
     await getAllDailySales(id);
   };
-
-  useEffect(() => {
-    const getList = async () => {
-      if (goals.length > 0) {
-        await getAllDailySales(goals[0]?.id ?? "");
-      }
-    };
-    getList();
-  }, [goals]);
 
   return goals.map((goal, i) => (
     <div key={i} className="flex w-full flex-col gap-4 rounded-md lg:flex-row">

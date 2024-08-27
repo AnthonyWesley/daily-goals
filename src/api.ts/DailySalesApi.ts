@@ -16,7 +16,6 @@ export class DailySalesApi {
   async list(id: string): Promise<IDailySales[]> {
     try {
       const response = await instance.get(`/${id}`);
-      console.log(response);
 
       if (response.status !== 200) {
         throw new Error("Failed to fetch dailySales");
@@ -31,7 +30,6 @@ export class DailySalesApi {
   async write(dailySales: IDailySales): Promise<IDailySales> {
     try {
       const response = await instance.post("/write", dailySales);
-      console.log(response);
 
       if (response.status !== 201) {
         throw new Error("Failed to create dailySales");
