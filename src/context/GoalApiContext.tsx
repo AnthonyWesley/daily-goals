@@ -23,6 +23,7 @@ export default function GoalApiProvider({
 
   const getUserIp = async () => {
     const data = await goalApi.createUserIp();
+    console.log(data);
 
     if (data) {
       setIp(data);

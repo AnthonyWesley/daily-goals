@@ -1,19 +1,15 @@
 import { useState } from "react";
-import { IGoal } from "./api.ts/GoalApi";
 import DailySalesArea from "./components/DailySalesArea";
 import GoalsArea from "./components/GoalsArea";
 import Dropdown from "./components/ui/Dropdown";
 import { useGoalApiContext } from "./context/GoalApiContext";
 
 export default function App() {
-  const [selectedGoals, setSelectedGoals] = useState<IGoal[]>([]);
+  const [option, setOption] = useState("");
   const { goals } = useGoalApiContext();
 
   const dropdownSelect = (option: string) => {
-    const aGoal = goals?.filter((g) => g.name === option);
-    if (aGoal && aGoal !== selectedGoals) {
-      setSelectedGoals(aGoal);
-    }
+    setOption(option);
   };
 
   return (
@@ -25,9 +21,9 @@ export default function App() {
           dropdownSelect={dropdownSelect}
         />
       </h1>
-      <GoalsArea goals={selectedGoals} />
 
-      <DailySalesArea goals={selectedGoals} />
+      <GoalsArea goals={goals.filter((g) => g.name === option)} />
+      <DailySalesArea goals={goals.filter((g) => g.name === option)} />
     </div>
   );
 }
