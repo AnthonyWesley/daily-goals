@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { GoalApi, IGoal } from "../api.ts/GoalApi";
+import { GoalApi, IGoal, instanceGoal } from "../api.ts/GoalApi";
 
 interface IGoalApiContext {
   ip: string;
@@ -8,6 +8,7 @@ interface IGoalApiContext {
   createGoal: (goal: IGoal) => Promise<void>;
   deleteGoal: (id: string) => Promise<void>;
   updateGoal: (id: string, goal: IGoal) => Promise<void>;
+  loadingGoalApi: boolean;
 }
 
 export const GoalApiContext = createContext<IGoalApiContext | null>(null);
@@ -20,7 +21,7 @@ export default function GoalApiProvider({
   const goalApi = new GoalApi();
   const [ip, setIp] = useState("");
   const [goals, setGoals] = useState<IGoal[]>([]);
-
+  const [loadingGoalApi, setLoadingGoalApi] = useState(false);
   const getUserIp = async () => {
     const data = await goalApi.createUserIp();
 
@@ -55,6 +56,30 @@ export default function GoalApiProvider({
     }
   };
 
+  instanceGoal.interceptors.request.use(
+    (req) => {
+      setLoadingGoalApi(true);
+      return req;
+    },
+    (error) => {
+      setLoadingGoalApi(false);
+      return Promise.reject(error);
+    },
+  );
+
+  instanceGoal.interceptors.response.use(
+    (res) => {
+      setLoadingGoalApi(false);
+      return res;
+    },
+    (error) => {
+      setLoadingGoalApi(false);
+      if (error.response && error.response.status === 404) {
+      }
+      return Promise.reject(error);
+    },
+  );
+
   useEffect(() => {
     getUserIp();
     getAllGoals();
@@ -68,6 +93,7 @@ export default function GoalApiProvider({
         createGoal,
         deleteGoal,
         updateGoal,
+        loadingGoalApi,
       }}
     >
       {children}

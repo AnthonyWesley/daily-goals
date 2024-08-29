@@ -7,7 +7,7 @@ export interface IDailySales {
   goalId: string;
 }
 
-const instance = axios.create({
+export const instanceDaily = axios.create({
   baseURL: "https://api-test-omega-one.vercel.app/daySales",
   headers: { "X-Custom-Header": "foobar" },
 });
@@ -15,7 +15,7 @@ const instance = axios.create({
 export class DailySalesApi {
   async list(id: string): Promise<IDailySales[]> {
     try {
-      const response = await instance.get(`/${id}`);
+      const response = await instanceDaily.get(`/${id}`);
 
       if (response.status !== 200) {
         throw new Error("Failed to fetch dailySales");
@@ -29,7 +29,7 @@ export class DailySalesApi {
 
   async write(dailySales: IDailySales): Promise<IDailySales> {
     try {
-      const response = await instance.post("/write", dailySales);
+      const response = await instanceDaily.post("/write", dailySales);
 
       if (response.status !== 201) {
         throw new Error("Failed to create dailySales");
@@ -43,7 +43,7 @@ export class DailySalesApi {
 
   async delete(id: string): Promise<IDailySales> {
     try {
-      const response = await instance.delete(`/${id}/delete`);
+      const response = await instanceDaily.delete(`/${id}/delete`);
       if (response.status !== 204) {
         throw new Error("Failed to delete goal");
       }
@@ -58,7 +58,7 @@ export class DailySalesApi {
     console.log(id, dailySales);
 
     try {
-      const response = await instance.put(`/${id}/change`, dailySales);
+      const response = await instanceDaily.put(`/${id}/change`, dailySales);
       if (response.status !== 200) {
         throw new Error("Failed to update dailySales");
       }

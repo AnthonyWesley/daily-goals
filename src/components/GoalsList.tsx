@@ -9,6 +9,7 @@ export default function GoalsList({ goals }: { goals: IGoal[] }) {
   const { updateGoal } = useGoalApiContext();
   const { dailySales } = useDailySalesContext();
   const [updatedGoal, setUpdatedGoal] = useState<IGoal | null>(null);
+  console.log(dailySales);
 
   const onConfirm = async (b: boolean) => {
     if (b && updatedGoal) {
@@ -40,13 +41,8 @@ export default function GoalsList({ goals }: { goals: IGoal[] }) {
   return goals.map((goal) => (
     <div
       key={goal.id}
-      className="flex w-full flex-col gap-2 lg:grid lg:grid-cols-2"
+      className="flex w-full flex-col gap-2 lg:grid lg:grid-cols-3"
     >
-      <Card
-        label="TOTAL DE VENDAS"
-        value={toCurrency(calculateTotalSales)}
-        isDisabled={true}
-      />
       <Card
         label="META DO DIA"
         value={toCurrency(
@@ -55,10 +51,20 @@ export default function GoalsList({ goals }: { goals: IGoal[] }) {
         isDisabled={true}
       />
       <Card
+        label="TOTAL DE VENDAS"
+        value={toCurrency(calculateTotalSales)}
+        isDisabled={true}
+      />
+      <Card
         label="META DO MÊS"
         value={toCurrency(goal.monthlyGoal)}
         onChange={(newValue) => handleMonthlyGoalChange(goal, newValue)}
         confirm={onConfirm}
+      />
+      <Card
+        label="ATÉ A META"
+        value={toCurrency(goal.monthlyGoal - calculateTotalSales)}
+        isDisabled={true}
       />
       <Card
         label="DIAS RESTANTES"

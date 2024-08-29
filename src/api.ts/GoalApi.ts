@@ -14,7 +14,7 @@ export interface IGoalUpdate {
   id?: string;
 }
 
-const instance = axios.create({
+export const instanceGoal = axios.create({
   baseURL: "https://api-test-omega-one.vercel.app/goal",
   headers: { "X-Custom-Header": "foobar" },
 });
@@ -27,6 +27,10 @@ export class GoalApi {
       if (response.status !== 200) {
         throw new Error("Failed to fetch user IP");
       }
+      const storedIp = localStorage.getItem("userIp");
+      if (!storedIp) {
+        localStorage.setItem("userIp", response.data.ip);
+      }
       return response.data.ip;
     } catch (error) {
       console.error("Error fetching user IP:", error);
@@ -37,8 +41,11 @@ export class GoalApi {
   async createUserIp() {
     try {
       const userIp = await this.getUserIp();
-
-      const response = await instance.post(
+      const storedIp = localStorage.getItem("userIp");
+      if (storedIp) {
+        return;
+      }
+      const response = await instanceGoal.post(
         "https://api-test-omega-one.vercel.app/user/write",
         {
           headers: { "X-User-IP": userIp },
@@ -57,7 +64,7 @@ export class GoalApi {
   async list(): Promise<IGoal[]> {
     try {
       const userIp = await this.getUserIp();
-      const response = await instance.get("/", {
+      const response = await instanceGoal.get("/", {
         headers: { "X-User-IP": userIp },
       });
       if (response.status !== 200) {
@@ -73,7 +80,7 @@ export class GoalApi {
   async write(goal: IGoal): Promise<IGoal> {
     try {
       const userIp = await this.getUserIp();
-      const response = await instance.post("/write", goal, {
+      const response = await instanceGoal.post("/write", goal, {
         headers: { "X-User-IP": userIp },
       });
       if (response.status !== 201) {
@@ -89,7 +96,7 @@ export class GoalApi {
   async delete(id: string): Promise<IGoal> {
     try {
       const userIp = await this.getUserIp();
-      const response = await instance.delete(`/${id}/delete`, {
+      const response = await instanceGoal.delete(`/${id}/delete`, {
         headers: { "X-User-IP": userIp },
       });
       if (response.status !== 204) {
@@ -105,7 +112,7 @@ export class GoalApi {
   async update(id: string, goal: IGoal): Promise<IGoal> {
     try {
       const userIp = await this.getUserIp();
-      const response = await instance.put(`/${id}/change`, goal, {
+      const response = await instanceGoal.put(`/${id}/change`, goal, {
         headers: { "X-User-IP": userIp },
       });
       if (response.status !== 200) {

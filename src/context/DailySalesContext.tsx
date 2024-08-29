@@ -1,5 +1,9 @@
 import { createContext, useState, useContext } from "react";
-import { DailySalesApi, IDailySales } from "../api.ts/DailySalesApi";
+import {
+  DailySalesApi,
+  IDailySales,
+  instanceDaily,
+} from "../api.ts/DailySalesApi";
 
 interface IDailySalesContext {
   dailySales: IDailySales[];
@@ -7,6 +11,7 @@ interface IDailySalesContext {
   createDaySales: (daySales: IDailySales) => Promise<void>;
   deleteDaySales: (id: string, goalId: string) => Promise<void>;
   updateDaySales: (id: string, daySales: IDailySales) => Promise<void>;
+  loadingDailyApi: boolean;
 }
 
 export const DailySalesContext = createContext<IDailySalesContext | null>(null);
@@ -18,6 +23,7 @@ export default function DailySalesApiProvider({
 }) {
   const dailySalesApi = new DailySalesApi();
   const [dailySales, setDailySales] = useState<IDailySales[]>([]);
+  const [loadingDailyApi, setLoadingDailyApi] = useState(false);
 
   const getAllDailySales = async (goalId: string) => {
     const data = await dailySalesApi.list(goalId);
@@ -50,6 +56,31 @@ export default function DailySalesApiProvider({
     }
   };
 
+  instanceDaily.interceptors.request.use(
+    (req) => {
+      setLoadingDailyApi(true);
+      return req;
+    },
+    (error) => {
+      setLoadingDailyApi(false);
+      return Promise.reject(error);
+    },
+  );
+
+  instanceDaily.interceptors.response.use(
+    (res) => {
+      setLoadingDailyApi(false);
+
+      return res;
+    },
+    (error) => {
+      setLoadingDailyApi(false);
+      if (error.response && error.response.status === 404) {
+      }
+      return Promise.reject(error);
+    },
+  );
+
   return (
     <DailySalesContext.Provider
       value={{
@@ -58,6 +89,7 @@ export default function DailySalesApiProvider({
         createDaySales,
         deleteDaySales,
         updateDaySales,
+        loadingDailyApi,
       }}
     >
       {children}

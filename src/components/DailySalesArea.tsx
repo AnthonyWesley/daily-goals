@@ -9,7 +9,6 @@ import { formatISO } from "date-fns";
 export default function DailySalesArea({ goals }: { goals: IGoal[] }) {
   const [sales, setSales] = useState("");
 
-  // const [dailyList, setDailyList] = useState<IDailySales[]>([]);
   const { createDaySales, getAllDailySales, dailySales } =
     useDailySalesContext();
 
@@ -18,7 +17,7 @@ export default function DailySalesArea({ goals }: { goals: IGoal[] }) {
   };
 
   const addDailySales = async (id: string) => {
-    if (sales) {
+    if (sales.length > 1) {
       const saleAmount = toNumber(sales);
       const currentDate = formatISO(new Date());
       await createDaySales({
@@ -27,8 +26,9 @@ export default function DailySalesArea({ goals }: { goals: IGoal[] }) {
         goalId: id,
       });
       setSales("");
+
+      await getAllDailySales(id);
     }
-    await getAllDailySales(id);
   };
 
   return goals.map((goal, i) => (
