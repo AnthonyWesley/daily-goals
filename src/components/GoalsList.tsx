@@ -38,6 +38,9 @@ export default function GoalsList({ goals }: { goals: IGoal[] }) {
   );
   const calculateDailyPending = goals[0]?.workingDays - dailySales.length;
 
+  const cardStyle =
+    "text-4xl flex flex-col items-start rounded-md border-l-[10px] border-l-[#284B63] bg-[#ffffff] p-2 font-semibold shadow-md";
+
   return goals.map((goal) => (
     <div
       key={goal.id}
@@ -49,22 +52,26 @@ export default function GoalsList({ goals }: { goals: IGoal[] }) {
           (goal.monthlyGoal - calculateTotalSales) / calculateDailyPending,
         )}
         isDisabled={true}
+        className={cardStyle}
       />
       <Card
         label="TOTAL DE VENDAS"
         value={toCurrency(calculateTotalSales)}
         isDisabled={true}
+        className={cardStyle}
       />
       <Card
         label="META DO MÊS"
         value={toCurrency(goal.monthlyGoal)}
         onChange={(newValue) => handleMonthlyGoalChange(goal, newValue)}
         confirm={onConfirm}
+        className={cardStyle}
       />
       <Card
         label="ATÉ A META"
         value={toCurrency(goal.monthlyGoal - calculateTotalSales)}
         isDisabled={true}
+        className={cardStyle}
       />
       <Card
         label="DIAS RESTANTES"
@@ -72,6 +79,7 @@ export default function GoalsList({ goals }: { goals: IGoal[] }) {
         onChange={(newValue) => handleWorkingDaysChange(goal, newValue)}
         confirm={onConfirm}
         isCurrency
+        className={cardStyle}
       />
     </div>
   ));

@@ -3,12 +3,13 @@ import { Icon } from "@iconify/react";
 import { autoCurrency } from "../../helpers/CurrencyFormatter";
 
 interface CardProps {
-  label: string;
+  label?: string;
   value: number | string;
   onChange?: (value: any) => void;
   isDisabled?: boolean;
   className?: string;
   confirm?: (b: boolean) => void;
+  delete?: (b: boolean) => void;
   isCurrency?: boolean;
 }
 
@@ -19,9 +20,11 @@ const Card: React.FC<CardProps> = ({
   isDisabled = false,
   className,
   confirm,
+  onDelete,
   isCurrency = false,
 }) => {
   const [inputDisabled, setInputDisabled] = useState(false);
+  const [isDelete, setIsDelete] = useState(false);
   const [text, setText] = useState<string | number>(value);
 
   useEffect(() => {
@@ -50,18 +53,24 @@ const Card: React.FC<CardProps> = ({
     }
   };
 
+  const toggleToDelete = () => {
+    setIsDelete(!isDelete);
+
+    if (onDelete) {
+      onDelete(isDelete);
+    }
+  };
+
   const disabled = isDisabled ? isDisabled : !inputDisabled;
   return (
-    <div
-      className={`text-[#353535]" flex flex-col items-start rounded-md border-l-[10px] border-l-[#284B63] bg-[#ffffff] p-2 font-semibold shadow-md ${className}`}
-    >
+    <div className={`text-[#353535]" ${className}`}>
       <label className="block text-base font-medium text-[#353535]">
         {label}
       </label>
-      <div className="flex w-full items-center gap-2 text-4xl">
+      <div className="flex items-center gap-2">
         <input
           type="text"
-          className={`w-full border-2 border-opacity-0 bg-transparent p-4 ${
+          className={`w-full border-2 border-opacity-0 bg-transparent p-2 ${
             disabled ? "border-[#3c6e71]" : ""
           }`}
           disabled={disabled}
@@ -69,7 +78,7 @@ const Card: React.FC<CardProps> = ({
           value={text ?? 0}
         />
         {!isDisabled && (
-          <div className="flex flex-col justify-center gap-1 self-end">
+          <div className="flex justify-center gap-1 self-end">
             <div
               onClick={toggleDisabled}
               className={`${
@@ -91,7 +100,7 @@ const Card: React.FC<CardProps> = ({
                 <Icon icon="line-md:close-small" width={30} />
               </div>
             )}
-            {/* {!inputDisabled && (
+            {!inputDisabled && (
               <div
                 className="flex h-10 w-10 justify-center rounded-md rounded-tl-xl bg-[#284b63] p-2 text-white"
                 title="Deletar"
@@ -102,7 +111,7 @@ const Card: React.FC<CardProps> = ({
                   onClick={() => setInputDisabled(true)}
                 />
               </div>
-            )} */}
+            )}
           </div>
         )}
       </div>

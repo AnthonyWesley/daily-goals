@@ -47,7 +47,7 @@ export default function DailySalesArea({ goals }: { goals: IGoal[] }) {
           Adicionar Venda
         </button>
       </div>
-      <DailySalesList dailyList={dailySales} />
+      <DailySalesList dailyList={dailySales} goals={goals} />
     </div>
   ));
 }
