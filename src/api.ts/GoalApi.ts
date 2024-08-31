@@ -15,7 +15,7 @@ export interface IGoalUpdate {
 }
 
 export const instanceGoal = axios.create({
-  baseURL: "https://api-test-omega-one.vercel.app/goal",
+  baseURL: "https://daily-goals-api.vercel.app/goal",
   headers: { "X-Custom-Header": "foobar" },
 });
 
@@ -27,11 +27,15 @@ export class GoalApi {
       if (response.status !== 200) {
         throw new Error("Failed to fetch user IP");
       }
+
+      const fetchedIp = response.data.ip;
       const storedIp = localStorage.getItem("userIp");
-      if (!storedIp) {
-        localStorage.setItem("userIp", response.data.ip);
+
+      if (!storedIp || storedIp !== fetchedIp) {
+        localStorage.setItem("userIp", fetchedIp);
       }
-      return response.data.ip;
+
+      return fetchedIp;
     } catch (error) {
       console.error("Error fetching user IP:", error);
       throw error;
@@ -40,20 +44,21 @@ export class GoalApi {
 
   async createUserIp() {
     try {
-      const userIp = await this.getUserIp();
       const storedIp = localStorage.getItem("userIp");
-      if (storedIp) {
-        return;
-      }
+
+      const userIp = await this.getUserIp();
+
       const response = await instanceGoal.post(
-        "https://api-test-omega-one.vercel.app/user/write",
+        "https://daily-goals-api.vercel.app/user/write",
         {
           headers: { "X-User-IP": userIp },
         },
       );
+
       if (response.status !== 200) {
         throw new Error("Failed to create user IP");
       }
+
       return response.data;
     } catch (error) {
       console.error("Error creating user IP:", error);
@@ -67,6 +72,7 @@ export class GoalApi {
       const response = await instanceGoal.get("/", {
         headers: { "X-User-IP": userIp },
       });
+
       if (response.status !== 200) {
         throw new Error("Failed to fetch goals");
       }
@@ -80,6 +86,8 @@ export class GoalApi {
   async write(goal: IGoal): Promise<IGoal> {
     try {
       const userIp = await this.getUserIp();
+      console.log(userIp);
+
       const response = await instanceGoal.post("/write", goal, {
         headers: { "X-User-IP": userIp },
       });
@@ -89,6 +97,8 @@ export class GoalApi {
       return response.data;
     } catch (error) {
       console.error("Error creating goal:", error);
+      console.log(error);
+
       throw error;
     }
   }

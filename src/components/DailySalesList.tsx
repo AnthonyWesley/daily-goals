@@ -1,8 +1,4 @@
-import {
-  autoCurrency,
-  parseCurrency,
-  toCurrency,
-} from "../helpers/CurrencyFormatter";
+import { parseCurrency, toCurrency } from "../helpers/CurrencyFormatter";
 import { IDailySales } from "../api.ts/DailySalesApi";
 import Card from "./ui/Card";
 import { useDailySalesContext } from "../context/DailySalesContext";
@@ -17,24 +13,33 @@ export default function DailySalesList({
   goals: IGoal[];
 }) {
   const { updateDaySales } = useDailySalesContext();
-  const [sales, setSales] = useState("");
-  const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  const handleSalesChange = (id: string, value: string) => {
-    const sanitizedValue = value.replace(/[^\d]/g, "");
-    setSales(autoCurrency(sanitizedValue));
-    setSelectedId(id);
-  };
+  const [updatedDaily, setUpdatedDaily] = useState<{
+    id: string;
+    sales: number;
+  } | null>(null);
 
-  const onConfirm = async (confirmed: boolean) => {
-    if (confirmed && selectedId && sales) {
-      await updateDaySales(selectedId, {
+  const handleEdit = async () => {
+    console.log(updatedDaily);
+
+    if (updatedDaily) {
+      await updateDaySales(updatedDaily.id, {
         day: new Date(),
-        sales: parseCurrency(sales),
+        sales: parseCurrency(updatedDaily.sales),
         goalId: goals[0]?.id ?? "",
       });
+      setUpdatedDaily(null);
     }
   };
+
+  const handleDelete = async () => {
+    console.log("deletou");
+  };
+
+  const menuOptions = [
+    { id: "delete", label: "ph:trash", onClick: handleDelete },
+    { id: "edit", label: "line-md:edit", onClick: handleEdit },
+  ];
 
   return (
     <div className="max-h-72 w-full overflow-hidden overflow-y-scroll rounded-md">
@@ -55,18 +60,19 @@ export default function DailySalesList({
               key={sale.id}
               className={index % 2 === 0 ? "bg-neutral-100" : "bg-neutral-200"}
             >
-              <td className="w-40 border-b border-gray-200 p-1 text-lg">
+              <td className="flex w-40 border-b border-gray-200 p-1 text-lg">
                 <Card
                   value={(sale.day as Date).toLocaleDateString("pt-BR")}
-                  confirm={onConfirm}
-                  isDisabled={true} // Adjust this based on your conditions
+                  isDisabled={true}
                 />
               </td>
               <td className="w-80 border-b border-gray-200 p-1 text-lg">
                 <Card
                   value={toCurrency(sale.sales)}
-                  onChange={(value) => handleSalesChange(sale.id ?? "", value)}
-                  confirm={onConfirm}
+                  onChange={(e) =>
+                    setUpdatedDaily({ id: sale.id ?? "", sales: e as number })
+                  }
+                  menuOptions={menuOptions}
                 />
               </td>
             </tr>

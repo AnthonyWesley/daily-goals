@@ -1,35 +1,48 @@
 import { useState } from "react";
 import { IGoal } from "../api.ts/GoalApi";
+import { useDailySalesContext } from "../context/DailySalesContext";
 import { useGoalApiContext } from "../context/GoalApiContext";
 import { parseCurrency, toCurrency } from "../helpers/CurrencyFormatter";
 import Card from "./ui/Card";
-import { useDailySalesContext } from "../context/DailySalesContext";
 
 export default function GoalsList({ goals }: { goals: IGoal[] }) {
-  const { updateGoal } = useGoalApiContext();
+  const { updateGoal, deleteGoal } = useGoalApiContext();
   const { dailySales } = useDailySalesContext();
   const [updatedGoal, setUpdatedGoal] = useState<IGoal | null>(null);
-  console.log(dailySales);
 
-  const onConfirm = async (b: boolean) => {
-    if (b && updatedGoal) {
-      await updateGoal(updatedGoal.id ?? "", {
-        name: updatedGoal.name,
-        monthlyGoal: parseCurrency(updatedGoal.monthlyGoal),
-        workingDays: Number(updatedGoal.workingDays),
+  const handleEdit = async (goal: IGoal) => {
+    const goalToUpdate = updatedGoal || goal;
+    if (goalToUpdate) {
+      await updateGoal(goalToUpdate.id ?? "", {
+        name: goalToUpdate.name,
+        monthlyGoal: parseCurrency(goalToUpdate.monthlyGoal),
+        workingDays: Number(goalToUpdate.workingDays),
       });
     }
   };
 
-  const handleWorkingDaysChange = (goal: IGoal, newValue: number) => {
+  const handleDelete = async () => {
+    const goalToUpdate = updatedGoal || goals[0];
+    await deleteGoal(goalToUpdate?.id ?? "");
+  };
+
+  const menuOptions = (goal: IGoal) => [
+    { id: "delete", label: "ph:trash", onClick: handleDelete },
+    { id: "edit", label: "line-md:edit", onClick: () => handleEdit(goal) },
+  ];
+
+  const handleWorkingDaysChange = (goal: IGoal, value: number) => {
     setUpdatedGoal({
       ...goal,
-      workingDays: newValue,
+      workingDays: value,
     });
   };
 
-  const handleMonthlyGoalChange = (goal: IGoal, newValue: number) => {
-    setUpdatedGoal({ ...goal, monthlyGoal: newValue });
+  const handleMonthlyGoalChange = (goal: IGoal, value: number) => {
+    setUpdatedGoal({
+      ...goal,
+      monthlyGoal: value,
+    });
   };
 
   const calculateTotalSales = dailySales.reduce(
@@ -38,48 +51,40 @@ export default function GoalsList({ goals }: { goals: IGoal[] }) {
   );
   const calculateDailyPending = goals[0]?.workingDays - dailySales.length;
 
-  const cardStyle =
-    "text-4xl flex flex-col items-start rounded-md border-l-[10px] border-l-[#284B63] bg-[#ffffff] p-2 font-semibold shadow-md";
-
+  const cardStyle = "bg-white p-2 text-4xl rounded-md font-semibold";
   return goals.map((goal) => (
     <div
       key={goal.id}
-      className="flex w-full flex-col gap-2 lg:grid lg:grid-cols-3"
+      className="flex w-full flex-col gap-2 lg:grid lg:grid-cols-2"
     >
       <Card
+        className={cardStyle}
+        label="TOTAL DE VENDAS"
+        value={toCurrency(calculateTotalSales)}
+        isDisabled={true}
+      />
+      <Card
+        className={cardStyle}
         label="META DO DIA"
         value={toCurrency(
           (goal.monthlyGoal - calculateTotalSales) / calculateDailyPending,
         )}
         isDisabled={true}
-        className={cardStyle}
       />
       <Card
-        label="TOTAL DE VENDAS"
-        value={toCurrency(calculateTotalSales)}
-        isDisabled={true}
         className={cardStyle}
-      />
-      <Card
         label="META DO MÊS"
         value={toCurrency(goal.monthlyGoal)}
-        onChange={(newValue) => handleMonthlyGoalChange(goal, newValue)}
-        confirm={onConfirm}
-        className={cardStyle}
+        onChange={(value) => handleMonthlyGoalChange(goal, value as number)}
+        menuOptions={menuOptions(goal)}
       />
       <Card
-        label="ATÉ A META"
-        value={toCurrency(goal.monthlyGoal - calculateTotalSales)}
-        isDisabled={true}
         className={cardStyle}
-      />
-      <Card
         label="DIAS RESTANTES"
         value={goal.workingDays - dailySales.length}
-        onChange={(newValue) => handleWorkingDaysChange(goal, newValue)}
-        confirm={onConfirm}
+        onChange={(value) => handleWorkingDaysChange(goal, value as number)}
+        menuOptions={menuOptions(goal)}
         isCurrency
-        className={cardStyle}
       />
     </div>
   ));

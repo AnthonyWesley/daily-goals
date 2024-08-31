@@ -8,7 +8,7 @@ export interface IDailySales {
 }
 
 export const instanceDaily = axios.create({
-  baseURL: "https://api-test-omega-one.vercel.app/daySales",
+  baseURL: "https://daily-goals-api.vercel.app/daySales",
   headers: { "X-Custom-Header": "foobar" },
 });
 

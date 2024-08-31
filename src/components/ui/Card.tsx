@@ -1,30 +1,32 @@
 import React, { useState, useEffect } from "react";
-import { Icon } from "@iconify/react";
+import CircularMenu from "./circularMenu/CircularMenu";
 import { autoCurrency } from "../../helpers/CurrencyFormatter";
 
+interface MenuOptionProps {
+  id: string;
+  label: string;
+  onClick: () => Promise<void>;
+}
 interface CardProps {
   label?: string;
   value: number | string;
-  onChange?: (value: any) => void;
-  isDisabled?: boolean;
+  onChange?: (value: string | number) => void;
+  menuOptions?: MenuOptionProps[];
   className?: string;
-  confirm?: (b: boolean) => void;
-  delete?: (b: boolean) => void;
   isCurrency?: boolean;
+  isDisabled?: boolean;
 }
 
 const Card: React.FC<CardProps> = ({
   label,
   value,
   onChange,
-  isDisabled = false,
+  menuOptions,
   className,
-  confirm,
-  onDelete,
   isCurrency = false,
+  isDisabled = false,
 }) => {
   const [inputDisabled, setInputDisabled] = useState(false);
-  const [isDelete, setIsDelete] = useState(false);
   const [text, setText] = useState<string | number>(value);
 
   useEffect(() => {
@@ -33,87 +35,50 @@ const Card: React.FC<CardProps> = ({
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     let newValue = event.target.value.replace(/[^\d]/g, "");
-    if (isCurrency) {
-      setText(newValue);
-    } else {
+
+    if (!isCurrency) {
       newValue = autoCurrency(newValue);
-      setText(newValue);
     }
 
-    if (onChange) {
-      onChange(newValue);
+    setText(newValue);
+    onChange?.(newValue);
+  };
+
+  const toggle = (action: string | boolean) => {
+    if (action === "line-md:edit") {
+      setInputDisabled(true);
+    } else {
+      setInputDisabled(false);
     }
   };
 
-  const toggleDisabled = () => {
-    setInputDisabled(!inputDisabled);
-
-    if (confirm) {
-      confirm(inputDisabled);
-    }
-  };
-
-  const toggleToDelete = () => {
-    setIsDelete(!isDelete);
-
-    if (onDelete) {
-      onDelete(isDelete);
-    }
-  };
-
-  const disabled = isDisabled ? isDisabled : !inputDisabled;
   return (
-    <div className={`text-[#353535]" ${className}`}>
-      <label className="block text-base font-medium text-[#353535]">
-        {label}
-      </label>
+    <div className={`flex flex-col text-[#353535] ${className}`}>
+      {label && (
+        <label className="block text-base font-medium text-[#353535]">
+          {label}
+        </label>
+      )}
       <div className="flex items-center gap-2">
         <input
           type="text"
-          className={`w-full border-2 border-opacity-0 bg-transparent p-2 ${
-            disabled ? "border-[#3c6e71]" : ""
+          className={`w-full border-2 bg-transparent p-2 ${
+            !inputDisabled
+              ? "border-[#3c6e71] border-opacity-0"
+              : "border-[#3c6e71]"
           }`}
-          disabled={disabled}
+          disabled={!inputDisabled}
+          value={text ?? ""}
           onChange={handleChange}
-          value={text ?? 0}
         />
-        {!isDisabled && (
-          <div className="flex justify-center gap-1 self-end">
-            <div
-              onClick={toggleDisabled}
-              className={`${
-                !isDisabled ? "bg-[#3c6e71]" : "bg-[#284b63]"
-              } flex h-10 w-10 cursor-pointer items-center justify-center rounded-md rounded-tl-xl p-2 text-white`}
-              title={!inputDisabled ? "Editar" : "Confirmar"}
-            >
-              {!inputDisabled && <Icon icon="line-md:edit" width={20} />}
-
-              {inputDisabled && <Icon icon="line-md:confirm" width={20} />}
-            </div>
-
-            {inputDisabled && (
-              <div
-                className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-md rounded-tl-xl bg-[#e63946] p-2 text-white"
-                onClick={() => setInputDisabled(false)}
-                title="Cancelar"
-              >
-                <Icon icon="line-md:close-small" width={30} />
-              </div>
-            )}
-            {!inputDisabled && (
-              <div
-                className="flex h-10 w-10 justify-center rounded-md rounded-tl-xl bg-[#284b63] p-2 text-white"
-                title="Deletar"
-              >
-                <Icon
-                  icon="ph:trash"
-                  width={20}
-                  onClick={() => setInputDisabled(true)}
-                />
-              </div>
-            )}
-          </div>
-        )}
+        <div>
+          {!isDisabled && (
+            <CircularMenu
+              options={menuOptions ? menuOptions : []}
+              toggle={toggle}
+            />
+          )}
+        </div>
       </div>
     </div>
   );
