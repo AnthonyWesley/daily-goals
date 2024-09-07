@@ -38,7 +38,7 @@ export default function GoalsArea({ goals }: { goals: IGoal[] }) {
   };
 
   return (
-    <div className="flex w-full flex-col gap-4 rounded-md">
+    <div className="flex w-full flex-col gap-1 rounded-md">
       <Accordion
         title={" ADICIONAR META"}
         content={

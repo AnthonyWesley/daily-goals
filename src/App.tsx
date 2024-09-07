@@ -22,7 +22,7 @@ export default function App() {
   }, [option]);
 
   return (
-    <div className="container mx-auto flex w-full flex-col gap-4 bg-[#d9d9d9] p-4">
+    <div className="container mx-auto flex w-full flex-col gap-1 bg-[#d9d9d9] p-4">
       {loadingGoalApi && <Spin />}
       {loadingDailyApi && <Spin />}
       <h1 className="flex items-center justify-between rounded-md border-l-[10px] border-l-[#284B63] bg-[#ffffff] p-1 font-semibold text-[#353535] lg:text-3xl">
