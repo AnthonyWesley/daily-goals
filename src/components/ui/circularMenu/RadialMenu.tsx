@@ -10,26 +10,20 @@ interface RadialMenuProps {
   options: Option[];
   isOpen: boolean;
   onSelect: (option: Option) => void;
-  toggle: (option: string) => void;
+  // toggle: (option: string) => void;
 }
 
 export default function RadialMenuReact({
   options,
   isOpen,
   onSelect,
-  toggle,
+  // toggle,
 }: RadialMenuProps) {
   const radius = 50;
-  const interceptor = (option: Option) => {
-    if (option?.label == "line-md:edit") {
-      toggle("line-md:edit");
-      onSelect(option);
-    } else onSelect(option);
-  };
 
   return (
     <div className="relative z-20">
-      {options.map((option, index) => {
+      {options?.map((option, index) => {
         const angle = (index / options.length - 1.5) * (Math.PI - 0.64);
         const x = radius * Math.cos(angle);
         const y = radius * Math.sin(angle);
@@ -44,7 +38,7 @@ export default function RadialMenuReact({
               transition: "left 0.3s ease-out, top 0.3s ease-out, opacity 0.3s",
               pointerEvents: isOpen ? "auto" : "none",
             }}
-            onClick={() => interceptor(option)}
+            onClick={() => onSelect(option)}
           >
             {/* {option.label} */}
             <Icon icon={option?.label as any} width={20} />

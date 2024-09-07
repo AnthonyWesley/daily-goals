@@ -47,19 +47,20 @@ export class GoalApi {
       const storedIp = localStorage.getItem("userIp");
 
       const userIp = await this.getUserIp();
+      if (!storedIp) {
+        const response = await instanceGoal.post(
+          "https://daily-goals-api.vercel.app/user/write",
+          {
+            headers: { "X-User-IP": userIp },
+          },
+        );
 
-      const response = await instanceGoal.post(
-        "https://daily-goals-api.vercel.app/user/write",
-        {
-          headers: { "X-User-IP": userIp },
-        },
-      );
+        if (response.status !== 200) {
+          throw new Error("Failed to create user IP");
+        }
 
-      if (response.status !== 200) {
-        throw new Error("Failed to create user IP");
+        return response.data;
       }
-
-      return response.data;
     } catch (error) {
       console.error("Error creating user IP:", error);
       throw error;
@@ -103,7 +104,7 @@ export class GoalApi {
     }
   }
 
-  async delete(id: string): Promise<IGoal> {
+  async delete(id: string): Promise<boolean> {
     try {
       const userIp = await this.getUserIp();
       const response = await instanceGoal.delete(`/${id}/delete`, {
@@ -112,7 +113,7 @@ export class GoalApi {
       if (response.status !== 204) {
         throw new Error("Failed to delete goal");
       }
-      return response.data;
+      return true;
     } catch (error) {
       console.error("Error deleting goal:", error);
       throw error;

@@ -41,22 +41,20 @@ export class DailySalesApi {
     }
   }
 
-  async delete(id: string): Promise<IDailySales> {
+  async delete(id: string): Promise<boolean> {
     try {
       const response = await instanceDaily.delete(`/${id}/delete`);
       if (response.status !== 204) {
-        throw new Error("Failed to delete goal");
+        throw new Error("Failed to delete dailySales");
       }
-      return response.data;
+      return true;
     } catch (error) {
-      console.error("Error deleting goal:", error);
+      console.error("Error deleting dailySales:", error);
       throw error;
     }
   }
 
   async update(id: string, dailySales: IDailySales): Promise<IDailySales> {
-    console.log(id, dailySales);
-
     try {
       const response = await instanceDaily.put(`/${id}/change`, dailySales);
       if (response.status !== 200) {

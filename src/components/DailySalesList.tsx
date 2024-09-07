@@ -1,44 +1,57 @@
 import { parseCurrency, toCurrency } from "../helpers/CurrencyFormatter";
 import { IDailySales } from "../api.ts/DailySalesApi";
-import Card from "./ui/Card";
 import { useDailySalesContext } from "../context/DailySalesContext";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { IGoal } from "../api.ts/GoalApi";
+import EditableInput from "./ui/EditableInput";
 
 export default function DailySalesList({
   dailyList,
-  goals,
 }: {
   dailyList: IDailySales[];
   goals: IGoal[];
 }) {
-  const { updateDaySales } = useDailySalesContext();
+  const { updateDaySales, deleteDaySales } = useDailySalesContext();
+  const updatedListRef = useRef<IDailySales | undefined>();
 
-  const [updatedDaily, setUpdatedDaily] = useState<{
-    id: string;
-    sales: number;
-  } | null>(null);
+  const [isEditing, setIsEditing] = useState<Record<string, boolean>>({});
 
-  const handleEdit = async () => {
-    console.log(updatedDaily);
+  const handleDailySalesChange = (value: string, daily: IDailySales) => {
+    const updatedGoal = {
+      ...daily,
+      sales: parseCurrency(value),
+    };
+    updatedListRef.current = updatedGoal;
+  };
 
-    if (updatedDaily) {
-      await updateDaySales(updatedDaily.id, {
-        day: new Date(),
-        sales: parseCurrency(updatedDaily.sales),
-        goalId: goals[0]?.id ?? "",
-      });
-      setUpdatedDaily(null);
+  const handleEdit = async (id: string) => {
+    const dailyList = updatedListRef.current;
+    if (dailyList) {
+      await updateDaySales(dailyList.id ?? "", dailyList);
     }
+    setIsEditing((prev) => ({ ...prev, [id]: false }));
   };
 
-  const handleDelete = async () => {
-    console.log("deletou");
+  const handleDelete = async (id: string, goalId: string) => {
+    if (goalId) await deleteDaySales(id, goalId);
   };
 
-  const menuOptions = [
-    { id: "delete", label: "ph:trash", onClick: handleDelete },
-    { id: "edit", label: "line-md:edit", onClick: handleEdit },
+  const toggleEdit = (id: string) => {
+    setIsEditing((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const options = (id: string, goalId: string) => [
+    {
+      id: "delete",
+      label: "ph:trash",
+      onClick: () => handleDelete(id, goalId),
+    },
+    {
+      id: "edit",
+      label: "line-md:edit",
+      onClick: () => handleEdit(id),
+      action: () => toggleEdit(id),
+    },
   ];
 
   return (
@@ -58,21 +71,24 @@ export default function DailySalesList({
           {dailyList?.map((sale, index) => (
             <tr
               key={sale.id}
-              className={index % 2 === 0 ? "bg-neutral-100" : "bg-neutral-200"}
+              className={` ${index % 2 === 0 ? "bg-neutral-100" : "bg-neutral-200"}`}
             >
-              <td className="flex w-40 border-b border-gray-200 p-1 text-lg">
-                <Card
-                  value={(sale.day as Date).toLocaleDateString("pt-BR")}
-                  isDisabled={true}
+              <td className="border-b border-gray-200 p-1 text-lg">
+                <EditableInput
+                  options={options(sale.id ?? "", sale.goalId)}
+                  initialValue={(sale.day as Date).toLocaleDateString("pt-BR")}
+                  disabled={true}
+                  className="w-40"
                 />
               </td>
-              <td className="w-80 border-b border-gray-200 p-1 text-lg">
-                <Card
-                  value={toCurrency(sale.sales)}
-                  onChange={(e) =>
-                    setUpdatedDaily({ id: sale.id ?? "", sales: e as number })
-                  }
-                  menuOptions={menuOptions}
+              <td className="border-b border-gray-200 p-1 text-lg">
+                <EditableInput
+                  options={options(sale.id ?? "", sale.goalId)}
+                  initialValue={toCurrency(sale.sales)}
+                  onChange={(i) => handleDailySalesChange(i, sale)}
+                  isDisabled
+                  disabled={!isEditing[sale.id ?? ""]}
+                  className="w-full px-4"
                 />
               </td>
             </tr>

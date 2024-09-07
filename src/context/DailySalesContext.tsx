@@ -31,6 +31,8 @@ export default function DailySalesApiProvider({
       ...sale,
       day: new Date(sale.day),
     }));
+    console.log(formattedDailySales);
+
     setDailySales(formattedDailySales);
     return formattedDailySales;
   };

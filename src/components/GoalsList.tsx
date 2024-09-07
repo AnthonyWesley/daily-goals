@@ -1,49 +1,58 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { IGoal } from "../api.ts/GoalApi";
 import { useDailySalesContext } from "../context/DailySalesContext";
 import { useGoalApiContext } from "../context/GoalApiContext";
 import { parseCurrency, toCurrency } from "../helpers/CurrencyFormatter";
-import Card from "./ui/Card";
+import EditableInput from "./ui/EditableInput";
 
 export default function GoalsList({ goals }: { goals: IGoal[] }) {
   const { updateGoal, deleteGoal } = useGoalApiContext();
   const { dailySales } = useDailySalesContext();
-  const [updatedGoal, setUpdatedGoal] = useState<IGoal | null>(null);
+  const [isEditing, setIsEditing] = useState(true);
+  const updatedListRef = useRef<IGoal | undefined>();
 
-  const handleEdit = async (goal: IGoal) => {
-    const goalToUpdate = updatedGoal || goal;
-    if (goalToUpdate) {
-      await updateGoal(goalToUpdate.id ?? "", {
-        name: goalToUpdate.name,
-        monthlyGoal: parseCurrency(goalToUpdate.monthlyGoal),
-        workingDays: Number(goalToUpdate.workingDays),
-      });
+  const handleMonthlyGoalChange = (value: string, goal: IGoal) => {
+    const updatedGoal = {
+      ...goal,
+      monthlyGoal: parseCurrency(value),
+      workingDays: goal.workingDays,
+    };
+    updatedListRef.current = updatedGoal;
+  };
+
+  const handleWorkingDaysChange = (value: string, goal: IGoal) => {
+    const updatedGoal = {
+      ...goal,
+      monthlyGoal: goal.monthlyGoal,
+      workingDays: parseInt(value),
+    };
+    updatedListRef.current = updatedGoal;
+  };
+
+  const handleEdit = () => {
+    if (updatedListRef.current) {
+      updateGoal(updatedListRef.current.id ?? "", updatedListRef.current);
     }
   };
 
   const handleDelete = async () => {
-    const goalToUpdate = updatedGoal || goals[0];
-    await deleteGoal(goalToUpdate?.id ?? "");
+    const goalsId = goals[0].id;
+    if (goalsId) await deleteGoal(goalsId);
   };
 
-  const menuOptions = (goal: IGoal) => [
-    { id: "delete", label: "ph:trash", onClick: handleDelete },
-    { id: "edit", label: "line-md:edit", onClick: () => handleEdit(goal) },
+  const options = [
+    {
+      id: "delete",
+      label: "ph:trash",
+      onClick: handleDelete,
+    },
+    {
+      id: "edit",
+      label: "line-md:edit",
+      onClick: handleEdit,
+      action: () => setIsEditing(!isEditing),
+    },
   ];
-
-  const handleWorkingDaysChange = (goal: IGoal, value: number) => {
-    setUpdatedGoal({
-      ...goal,
-      workingDays: value,
-    });
-  };
-
-  const handleMonthlyGoalChange = (goal: IGoal, value: number) => {
-    setUpdatedGoal({
-      ...goal,
-      monthlyGoal: value,
-    });
-  };
 
   const calculateTotalSales = dailySales.reduce(
     (sum, item) => sum + item.sales,
@@ -52,38 +61,46 @@ export default function GoalsList({ goals }: { goals: IGoal[] }) {
   const calculateDailyPending = goals[0]?.workingDays - dailySales.length;
 
   const cardStyle = "bg-white p-2 text-4xl rounded-md font-semibold";
+
   return goals.map((goal) => (
     <div
       key={goal.id}
       className="flex w-full flex-col gap-2 lg:grid lg:grid-cols-2"
     >
-      <Card
-        className={cardStyle}
+      <EditableInput
         label="TOTAL DE VENDAS"
-        value={toCurrency(calculateTotalSales)}
-        isDisabled={true}
-      />
-      <Card
         className={cardStyle}
+        options={options}
+        initialValue={toCurrency(calculateTotalSales)}
+        disabled={true}
+      />
+      <EditableInput
         label="META DO DIA"
-        value={toCurrency(
+        className={cardStyle}
+        options={options}
+        initialValue={toCurrency(
           (goal.monthlyGoal - calculateTotalSales) / calculateDailyPending,
         )}
-        isDisabled={true}
+        onChange={(i) => handleWorkingDaysChange(i, goal)}
+        disabled={true}
       />
-      <Card
-        className={cardStyle}
+      <EditableInput
         label="META DO MÊS"
-        value={toCurrency(goal.monthlyGoal)}
-        onChange={(value) => handleMonthlyGoalChange(goal, value as number)}
-        menuOptions={menuOptions(goal)}
-      />
-      <Card
         className={cardStyle}
+        options={options}
+        initialValue={toCurrency(goal.monthlyGoal)}
+        onChange={(i) => handleMonthlyGoalChange(i, goal)}
+        disabled={isEditing}
+        isDisabled
+      />
+      <EditableInput
         label="DIAS RESTANTES"
-        value={goal.workingDays - dailySales.length}
-        onChange={(value) => handleWorkingDaysChange(goal, value as number)}
-        menuOptions={menuOptions(goal)}
+        className={cardStyle}
+        options={options}
+        initialValue={goal.workingDays - dailySales.length}
+        onChange={(i) => handleWorkingDaysChange(i, goal)}
+        disabled={isEditing}
+        isDisabled
         isCurrency
       />
     </div>

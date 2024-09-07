@@ -7,14 +7,15 @@ interface MenuOption {
   id: string;
   label: string | false;
   onClick: () => void;
+  action?: () => void;
 }
 
 export default function CircularMenu({
   options,
-  toggle,
+  // toggle,
 }: {
   options: MenuOption[];
-  toggle: (option: string | boolean) => void;
+  // toggle: (option: string | boolean) => void;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState<MenuOption | null>(null);
@@ -22,6 +23,12 @@ export default function CircularMenu({
   const toggleMenu = () => {
     setIsOpen(!isOpen);
     setSelectedOption(null);
+  };
+
+  const handleExtraAction = (option: MenuOption) => {
+    if (option.action) {
+      option.action();
+    }
   };
 
   return (
@@ -34,12 +41,14 @@ export default function CircularMenu({
             selectedOption.onClick();
             setSelectedOption(null);
             setIsOpen(false);
-            toggle(true);
+            handleExtraAction(options[1]);
+            // toggle(true);
           }}
           onCancel={() => {
             setSelectedOption(null);
             setIsOpen(true);
-            toggle(false);
+            handleExtraAction(options[1]);
+            // toggle(false);
           }}
         />
       )}
@@ -47,11 +56,11 @@ export default function CircularMenu({
       {!selectedOption && (
         <RadialMenu
           isOpen={isOpen}
-          // setIsOpen={setIsOpen}
-          toggle={toggle}
+          // toggle={toggle}
           options={options}
           onSelect={(option) => {
-            setSelectedOption(option);
+            handleExtraAction(option); // Executa a ação extra antes de exibir o RadialConfirm
+            setSelectedOption(option); // Exibe o RadialConfirm depois
             setIsOpen(true);
           }}
         />
