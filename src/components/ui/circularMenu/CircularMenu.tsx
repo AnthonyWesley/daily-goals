@@ -67,7 +67,7 @@ export default function CircularMenu({
       )}
 
       <button
-        className={`rounded-full p-3 text-white transition-all ${isOpen ? "bg-[#fe915e]/40" : "bg-[#fe915e]"}`}
+        className={`rounded-full p-3 text-white transition-all ${isOpen ? "bg-teal-950/50" : "bg-teal-950"}`}
         onClick={(selectedOption?.label as any) ? () => {} : toggleMenu}
       >
         {!isOpen && (

@@ -60,49 +60,54 @@ export default function GoalsList({ goals }: { goals: IGoal[] }) {
   );
   const calculateDailyPending = goals[0]?.workingDays - dailySales.length;
 
-  const cardStyle = "bg-white p-2 text-4xl rounded-md font-semibold";
+  const cardStyle = "bg-white p-2 text-3xl rounded-md font-semibold uppercase";
 
   return goals.map((goal) => (
-    <div
-      key={goal.id}
-      className="flex w-full flex-col gap-2 lg:grid lg:grid-cols-2"
-    >
-      <EditableInput
-        label="TOTAL DE VENDAS"
-        className={cardStyle}
-        options={options}
-        initialValue={toCurrency(calculateTotalSales)}
-        disabled={true}
-      />
-      <EditableInput
-        label="META DO DIA"
-        className={cardStyle}
-        options={options}
-        initialValue={toCurrency(
-          (goal.monthlyGoal - calculateTotalSales) / calculateDailyPending,
-        )}
-        onChange={(i) => handleWorkingDaysChange(i, goal)}
-        disabled={true}
-      />
-      <EditableInput
-        label="META DO MÊS"
-        className={cardStyle}
-        options={options}
-        initialValue={toCurrency(goal.monthlyGoal)}
-        onChange={(i) => handleMonthlyGoalChange(i, goal)}
-        disabled={isEditing}
-        isDisabled
-      />
-      <EditableInput
-        label="DIAS RESTANTES"
-        className={cardStyle}
-        options={options}
-        initialValue={goal.workingDays - dailySales.length}
-        onChange={(i) => handleWorkingDaysChange(i, goal)}
-        disabled={isEditing}
-        isDisabled
-        isCurrency
-      />
+    <div key={goal.id} className="flex w-full flex-col gap-2">
+      <div className="col-span-2 flex w-full items-center justify-between rounded-md bg-[#3c6e71] p-2 text-3xl font-semibold uppercase text-white">
+        <EditableInput
+          label="Meta Mensal"
+          initialValue={toCurrency(goal.monthlyGoal)}
+          onChange={(i) => handleMonthlyGoalChange(i, goal)}
+          disabled={isEditing}
+          isCurrency
+        />
+        <EditableInput
+          label="Dias Totais"
+          options={options}
+          initialValue={goal.workingDays}
+          onChange={(i) => handleWorkingDaysChange(i, goal)}
+          disabled={isEditing}
+        />
+      </div>
+      <div className="grid gap-2 lg:grid-cols-2">
+        <EditableInput
+          label="Meta Diária"
+          className={cardStyle}
+          initialValue={toCurrency(
+            (goal.monthlyGoal - calculateTotalSales) / calculateDailyPending,
+          )}
+          disabled={true}
+        />
+        <EditableInput
+          label="Total de Vendas"
+          className={cardStyle}
+          initialValue={toCurrency(calculateTotalSales)}
+          disabled={true}
+        />
+        <EditableInput
+          label="Vendas Restantes"
+          className={cardStyle}
+          initialValue={toCurrency(goal.monthlyGoal - calculateTotalSales)}
+          disabled={true}
+        />
+        <EditableInput
+          label="Dias Restantes"
+          className={cardStyle}
+          initialValue={goal.workingDays - dailySales.length}
+          disabled={true}
+        />
+      </div>
     </div>
   ));
 }

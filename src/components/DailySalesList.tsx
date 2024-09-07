@@ -59,10 +59,10 @@ export default function DailySalesList({
       <table className="h-full w-full rounded-md border border-gray-300 bg-white">
         <thead>
           <tr>
-            <th className="border-b-2 border-gray-300 bg-[#284B63] px-6 py-3 text-left text-base font-medium uppercase tracking-wider text-white">
+            <th className="border-b-2 border-gray-300 bg-[#3c6e71] px-6 py-3 text-left text-base font-medium uppercase tracking-wider text-white">
               Dia
             </th>
-            <th className="border-b-2 border-gray-300 bg-[#284B63] px-6 py-3 text-left text-base font-medium uppercase tracking-wider text-white">
+            <th className="border-b-2 border-gray-300 bg-[#3c6e71] px-6 py-3 text-left text-base font-medium uppercase tracking-wider text-white">
               Valor
             </th>
           </tr>
@@ -73,22 +73,22 @@ export default function DailySalesList({
               key={sale.id}
               className={` ${index % 2 === 0 ? "bg-neutral-100" : "bg-neutral-200"}`}
             >
-              <td className="border-b border-gray-200 p-1 text-lg">
+              <td className="border-b border-gray-200 p-4 text-lg">
                 <EditableInput
-                  options={options(sale.id ?? "", sale.goalId)}
+                  // options={options(sale.id ?? "", sale.goalId)}
                   initialValue={(sale.day as Date).toLocaleDateString("pt-BR")}
                   disabled={true}
-                  className="w-40"
+                  className="w-28 lg:w-40"
                 />
               </td>
-              <td className="border-b border-gray-200 p-1 text-lg">
+              <td className="border-b border-gray-200 text-lg">
                 <EditableInput
                   options={options(sale.id ?? "", sale.goalId)}
                   initialValue={toCurrency(sale.sales)}
                   onChange={(i) => handleDailySalesChange(i, sale)}
-                  isDisabled
                   disabled={!isEditing[sale.id ?? ""]}
                   className="w-full px-4"
+                  isCurrency
                 />
               </td>
             </tr>

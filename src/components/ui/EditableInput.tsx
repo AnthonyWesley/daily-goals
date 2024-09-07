@@ -5,12 +5,11 @@ import { autoCurrency } from "../../helpers/CurrencyFormatter";
 interface EditableInputProps {
   label?: string;
   initialValue: string | number;
-
   onChange?: (value: string) => void;
   className?: string;
   isCurrency?: boolean;
   isDisabled?: boolean;
-  options: any;
+  options?: any;
   disabled?: boolean;
 }
 
@@ -21,11 +20,9 @@ const EditableInput: React.FC<EditableInputProps> = ({
   onChange,
   className,
   isCurrency = false,
-  isDisabled = false,
   disabled,
 }) => {
   const [value, setValue] = useState(initialValue);
-  // const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     setValue(initialValue);
@@ -34,7 +31,7 @@ const EditableInput: React.FC<EditableInputProps> = ({
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     let newValue = event.target.value.replace(/[^\d]/g, "");
 
-    if (!isCurrency) {
+    if (isCurrency) {
       newValue = autoCurrency(newValue);
     }
 
@@ -43,17 +40,13 @@ const EditableInput: React.FC<EditableInputProps> = ({
   };
 
   return (
-    <div className={`flex flex-col text-[#353535] ${className}`}>
-      {label && (
-        <label className="block text-base font-medium text-[#353535]">
-          {label}
-        </label>
-      )}
+    <div className={`flex flex-col ${className}`}>
+      {label && <label className="block text-base font-medium">{label}</label>}
       <div className="flex items-center gap-2">
         <input
           type="text"
           className={`w-full bg-transparent p-2 ${
-            disabled ? "border-opacity-0" : "border-2 border-[#3c6e71]"
+            disabled ? "border-opacity-0" : "border-2"
           }`}
           style={{
             pointerEvents: disabled ? "none" : "auto",
@@ -61,7 +54,7 @@ const EditableInput: React.FC<EditableInputProps> = ({
           value={value}
           onChange={handleChange}
         />
-        <div>{isDisabled && <CircularMenu options={options} />}</div>
+        <div>{options && <CircularMenu options={options} />}</div>
       </div>
     </div>
   );

@@ -15,18 +15,16 @@ export default function Input({ label, value, onChange, className }: IInput) {
 
   return (
     <div
-      className={`flex flex-col gap-1 rounded-sm bg-transparent ${className}`}
+      className={`flex flex-col gap-1 rounded-sm bg-neutral-200 p-2 ${className}`}
     >
-      <label htmlFor={label} className="">
-        {label}
-      </label>
       <input
         type="text"
         id={label}
         name={label}
         value={value}
         onChange={handleChange}
-        className="h-10 rounded-sm border-none bg-neutral-200 p-1 text-2xl"
+        placeholder={label}
+        className="h-8 rounded-sm border-none bg-transparent p-1 text-2xl outline-none"
       />
     </div>
   );

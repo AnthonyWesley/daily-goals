@@ -4,6 +4,7 @@ import { autoCurrency, toNumber } from "../helpers/CurrencyFormatter";
 import GoalsList from "./GoalsList";
 import Input from "./ui/Input";
 import { IGoal } from "../api.ts/GoalApi";
+import Accordion from "./ui/Accordion";
 
 export default function GoalsArea({ goals }: { goals: IGoal[] }) {
   const [name, setName] = useState("");
@@ -37,33 +38,39 @@ export default function GoalsArea({ goals }: { goals: IGoal[] }) {
   };
 
   return (
-    <div className="flex w-full flex-col gap-4 rounded-md lg:flex-row">
-      <div className="grid grid-cols-3 gap-2 rounded-md bg-[#ffffff] p-3 lg:w-96">
-        <Input
-          label="Nome"
-          value={name}
-          onChange={handleNameChange}
-          className="col-span-3"
-        />
-        <Input
-          label="Meta"
-          value={monthlyGoal}
-          onChange={handleMonthlyGoalChange}
-          className="col-span-2"
-        />
-        <Input
-          label="Dias"
-          value={workingDays}
-          onChange={handleWorkingDaysChange}
-        />
+    <div className="flex w-full flex-col gap-4 rounded-md">
+      <Accordion
+        title={" ADICIONAR META"}
+        content={
+          <div className="flex w-full gap-2 rounded-md bg-[#ffffff] p-3">
+            <Input
+              label="Nome"
+              value={name}
+              onChange={handleNameChange}
+              className="w-full"
+            />
+            <Input
+              label="Meta"
+              value={monthlyGoal}
+              onChange={handleMonthlyGoalChange}
+              className="w-full"
+            />
+            <Input
+              label="Dias"
+              value={workingDays}
+              onChange={handleWorkingDaysChange}
+              className="w-40"
+            />
 
-        <button
-          className="col-span-3 w-full rounded-md bg-[#3c6e71] p-2 text-[#ffffff]"
-          onClick={addGoal}
-        >
-          Adicionar Meta
-        </button>
-      </div>
+            <button
+              className="col-span-3 w-96 rounded-md bg-[#3c6e71] p-2 text-[#ffffff]"
+              onClick={addGoal}
+            >
+              ADD
+            </button>
+          </div>
+        }
+      />
 
       <GoalsList goals={goals} />
     </div>
