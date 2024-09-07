@@ -42,7 +42,7 @@ export default function GoalsArea({ goals }: { goals: IGoal[] }) {
       <Accordion
         title={" ADICIONAR META"}
         content={
-          <div className="flex w-full gap-2 rounded-md bg-[#ffffff] p-3">
+          <div className="flex w-full flex-col gap-2 rounded-md bg-zinc-600 p-3 lg:flex-row">
             <Input
               label="Nome"
               value={name}
@@ -59,11 +59,11 @@ export default function GoalsArea({ goals }: { goals: IGoal[] }) {
               label="Dias"
               value={workingDays}
               onChange={handleWorkingDaysChange}
-              className="w-40"
+              className="lg:w-40"
             />
 
             <button
-              className="col-span-3 w-96 rounded-md bg-[#3c6e71] p-2 text-[#ffffff]"
+              className="col-span-3 w-80 rounded-md bg-[#3c6e71] p-2 text-[#ffffff]"
               onClick={addGoal}
             >
               ADD

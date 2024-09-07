@@ -24,7 +24,7 @@ export default function Accordion({
     <div
       className={` ${disabled ? "pointer-events-none" : "pointer-events-auto"} w-full overflow-hidden rounded-sm bg-transparent`}
     >
-      <div className="flex w-48 items-center justify-between gap-1 rounded-md bg-[#2a2f3b] p-1 text-white focus:outline-none">
+      <div className="flex w-48 items-center justify-between gap-1 rounded-md bg-[#2a2f3b] p-2 text-white focus:outline-none">
         {title ? title : ""}
 
         {!icon && (
@@ -50,7 +50,7 @@ export default function Accordion({
           isOpen ? "max-h-screen" : "max-h-0"
         }`}
       >
-        <div className="p-2">{content}</div>
+        <div className="">{content}</div>
       </div>
     </div>
   );

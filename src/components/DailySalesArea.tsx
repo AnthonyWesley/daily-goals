@@ -33,20 +33,20 @@ export default function DailySalesArea({ goals }: { goals: IGoal[] }) {
   };
 
   return goals.map((goal, i) => (
-    <div key={i} className="flex w-full flex-col gap-4 rounded-md">
+    <div key={i} className="flex w-full flex-col gap-1 rounded-md">
       <Accordion
         title={" ADICIONAR VENDA"}
         content={
-          <div className="flex gap-1 rounded-md bg-[#ffffff] p-3">
+          <div className="flex w-full flex-col gap-2 rounded-md bg-zinc-600 p-3 lg:flex-row">
             <Input
               label="Vendas de hoje"
               value={sales}
               onChange={handleSalesChange}
-              className="w-full"
+              className="lg:w-3/4"
             />
 
             <button
-              className="col-span-2 w-40 rounded-md bg-[#3c6e71] py-2 text-[#ffffff]"
+              className="col-span-2 rounded-md bg-[#3c6e71] py-2 text-[#ffffff] lg:w-96"
               onClick={() => addDailySales(goal.id ?? "")}
             >
               ADD
