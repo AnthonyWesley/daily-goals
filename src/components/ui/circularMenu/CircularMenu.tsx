@@ -10,13 +10,7 @@ interface MenuOption {
   action?: () => void;
 }
 
-export default function CircularMenu({
-  options,
-  // toggle,
-}: {
-  options: MenuOption[];
-  // toggle: (option: string | boolean) => void;
-}) {
+export default function CircularMenu({ options }: { options: MenuOption[] }) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState<MenuOption | null>(null);
 
@@ -42,13 +36,11 @@ export default function CircularMenu({
             setSelectedOption(null);
             setIsOpen(false);
             handleExtraAction(options[1]);
-            // toggle(true);
           }}
           onCancel={() => {
             setSelectedOption(null);
             setIsOpen(true);
             handleExtraAction(options[1]);
-            // toggle(false);
           }}
         />
       )}
@@ -56,11 +48,10 @@ export default function CircularMenu({
       {!selectedOption && (
         <RadialMenu
           isOpen={isOpen}
-          // toggle={toggle}
           options={options}
           onSelect={(option) => {
-            handleExtraAction(option); // Executa a ação extra antes de exibir o RadialConfirm
-            setSelectedOption(option); // Exibe o RadialConfirm depois
+            handleExtraAction(option);
+            setSelectedOption(option);
             setIsOpen(true);
           }}
         />

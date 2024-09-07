@@ -24,7 +24,7 @@ export default function Accordion({
     <div
       className={` ${disabled ? "pointer-events-none" : "pointer-events-auto"} w-full overflow-hidden rounded-sm bg-transparent`}
     >
-      <div className="flex w-48 items-center justify-between gap-1 rounded-md bg-[#2a2f3b] p-2 text-white focus:outline-none">
+      <div className="mb-1 flex w-full items-center justify-between gap-1 rounded-md bg-[#2a2f3b] p-2 text-white focus:outline-none">
         {title ? title : ""}
 
         {!icon && (

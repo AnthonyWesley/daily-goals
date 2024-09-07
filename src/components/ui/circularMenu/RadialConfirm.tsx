@@ -31,7 +31,7 @@ export default function RadialConfirm({
     <div className="relative z-20">
       {confirmOptions.map((option, index) => {
         const angle = (index / confirmOptions.length - 1.5) * (Math.PI - 0.64);
-        const x = radius * Math.cos(angle);
+        const x = radius * Math.cos(angle) + 10;
         const y = radius * Math.sin(angle);
         return (
           <button
