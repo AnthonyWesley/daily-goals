@@ -24,8 +24,8 @@ export default function Dropdown({
   };
 
   return (
-    <div className="select relative w-40 cursor-pointer text-base text-white duration-500">
-      <div className="selected relative z-20 flex items-center justify-between rounded-md bg-[#2a2f3b] p-2">
+    <div className="select relative z-40 w-40 cursor-pointer text-base text-white duration-500">
+      <div className="selected relative flex items-center justify-between rounded-md bg-[#353535] p-2">
         <span className="ml-2">{selectedOption}</span>
         <svg
           className={`arrow -rotate-90 duration-500`}
@@ -41,13 +41,13 @@ export default function Dropdown({
         </svg>
       </div>
 
-      <div className="options absolute top-0 flex w-40 flex-col rounded-md bg-[#2a2f3b] p-2 opacity-0 duration-500">
+      <div className="options absolute top-0 flex w-40 flex-col rounded-md bg-[#353535] p-2 opacity-0 duration-500">
         <div>
           {dropdownList?.map((option, index) => (
             <div
               key={index}
               className={`rounded-sm p-2 ${
-                selectedOption === option ? "bg-gray-600" : ""
+                selectedOption === option ? "bg-neutral-600" : ""
               }`}
               onClick={() => handleOptionClick(option)}
             >

@@ -78,9 +78,10 @@ export default function GoalsList({ goals }: { goals: IGoal[] }) {
           initialValue={goal.workingDays}
           onChange={(i) => handleWorkingDaysChange(i, goal)}
           disabled={isEditing}
+          className="w-80"
         />
       </div>
-      <div className="grid gap-2 lg:grid-cols-2">
+      <div className="flex flex-col gap-2">
         <EditableInput
           label="Meta Diária"
           className={cardStyle}

@@ -33,11 +33,11 @@ export default function DailySalesArea({ goals }: { goals: IGoal[] }) {
   };
 
   return goals.map((goal, i) => (
-    <div key={i} className="flex w-full flex-col gap-1 rounded-md">
+    <div key={i} className="flex flex-col gap-1 rounded-md">
       <Accordion
         title={" ADICIONAR VENDA"}
         content={
-          <div className="flex w-full flex-col gap-2 rounded-md bg-zinc-600 p-3 lg:flex-row">
+          <div className="flex w-full flex-col gap-2 rounded-md bg-[#353535] p-3">
             <Input
               label="Vendas de hoje"
               value={sales}

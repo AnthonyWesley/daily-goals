@@ -38,11 +38,11 @@ export default function GoalsArea({ goals }: { goals: IGoal[] }) {
   };
 
   return (
-    <div className="flex w-full flex-col gap-1 rounded-md">
+    <div className="flex w-full flex-col gap-1 rounded-md lg:w-2/3">
       <Accordion
         title={" ADICIONAR META"}
         content={
-          <div className="flex w-full flex-col gap-2 rounded-md bg-zinc-600 p-3 lg:flex-row">
+          <div className="flex flex-col gap-2 rounded-md bg-[#353535] p-3">
             <Input
               label="Nome"
               value={name}

@@ -22,19 +22,20 @@ export default function App() {
   }, [option]);
 
   return (
-    <div className="container mx-auto flex w-full flex-col gap-1 bg-[#d9d9d9] p-4">
+    <div className="container mx-auto my-1 flex w-full flex-col gap-1 rounded-md bg-[#d9d9d9] p-4">
       {loadingGoalApi && <Spin />}
       {loadingDailyApi && <Spin />}
-      <h1 className="flex items-center justify-between rounded-md border-l-[10px] border-l-[#284B63] bg-[#ffffff] p-1 font-semibold text-[#353535] lg:text-3xl">
+      <h1 className="flex items-center justify-between rounded-md bg-[#3c6e71] p-4 font-semibold text-white lg:text-3xl">
         MINHAS METAS
         <Dropdown
           dropdownList={goals.map((g) => g.name)}
           dropdownSelect={dropdownSelect}
         />
       </h1>
-
-      <GoalsArea goals={goals.filter((g) => g.name === option)} />
-      <DailySalesArea goals={goals.filter((g) => g.name === option)} />
+      <div className="flex w-full flex-col gap-2 lg:flex-row">
+        <GoalsArea goals={goals.filter((g) => g.name === option)} />
+        <DailySalesArea goals={goals.filter((g) => g.name === option)} />
+      </div>
     </div>
   );
 }
