@@ -3,14 +3,43 @@
 @tailwind utilities;
 
 body {
-  background-color: #a3a3a3;
+  background-color: #f3f4f6;
 }
 
 .select:hover > .options {
   opacity: 1;
+  visibility: visible;
   top: 49px;
 }
 
 .select:hover > .selected .arrow {
   transform: rotate(0deg);
+}
+
+/* Estilo do ícone para branco */
+.Toastify__toast-icon {
+  color: white;
+}
+:root {
+  --toastify-color-light: #fff;
+  --toastify-color-dark: #121212;
+  --toastify-color-info: #3498db;
+  --toastify-color-success: #07bc0c;
+  --toastify-color-warning: #f1c40f;
+  --toastify-color-error: #e74c3c;
+  --toastify-color-transparent: rgba(255, 255, 255, 0.7);
+
+  --toastify-icon-color-info: var(--toastify-color-info);
+  --toastify-icon-color-success: var(--toastify-color-success);
+  --toastify-icon-color-warning: var(--toastify-color-warning);
+  --toastify-icon-color-error: var(--toastify-color-error);
+
+  --toastify-toast-background: #e74c3c;
+}
+.Toastify__toast-theme--colored.Toastify__toast--warning {
+  background-color: #e74c3c;
+}
+
+.Toastify__toast-theme--colored.Toastify__toast--error {
+  background-color: #e74c3c;
 }

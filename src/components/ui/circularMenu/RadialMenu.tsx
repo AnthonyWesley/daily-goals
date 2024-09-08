@@ -30,7 +30,7 @@ export default function RadialMenuReact({
         return (
           <button
             key={index}
-            className={`btn absolute -translate-x-1/2 -translate-y-1/2 transform rounded-full bg-teal-950 p-3 text-white transition-all duration-300 ${isOpen ? "opacity-100" : "opacity-0"}`}
+            className={`btn absolute -translate-x-1/2 -translate-y-1/2 transform rounded-full bg-[#3c6e71] p-3 text-white transition-all duration-300 ${isOpen ? "opacity-100" : "opacity-0"}`}
             style={{
               left: isOpen ? `calc(50% + ${x}px)` : "30%",
               top: isOpen ? `calc(50% + ${y}px)` : "50%",

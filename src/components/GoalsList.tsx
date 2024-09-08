@@ -63,11 +63,12 @@ export default function GoalsList({ goals }: { goals: IGoal[] }) {
   );
   const calculateDailyPending = goals[0]?.workingDays - dailySales.length;
 
-  const cardStyle = "bg-white p-2 text-3xl rounded-md font-semibold uppercase";
+  const cardStyle =
+    "shadow-lg bg-white p-2 text-3xl rounded-md font-semibold uppercase";
 
   return goals.map((goal) => (
     <div key={goal.id} className="flex w-full flex-col gap-2">
-      <div className="col-span-2 flex w-full items-center justify-between rounded-md bg-[#3c6e71] p-2 text-3xl font-semibold uppercase text-white">
+      <div className="col-span-2 flex w-full items-center justify-between rounded-md bg-gray-800 p-4 text-3xl font-semibold uppercase text-white shadow-lg">
         <EditableInput
           label="Meta Mensal"
           initialValue={toCurrency(goal.monthlyGoal)}
@@ -84,7 +85,7 @@ export default function GoalsList({ goals }: { goals: IGoal[] }) {
           className="w-80"
         />
       </div>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 md:grid md:grid-cols-2">
         <EditableInput
           label="Meta Diária"
           className={cardStyle}

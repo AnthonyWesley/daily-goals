@@ -39,7 +39,7 @@ export default function DailySalesArea({ goals }: { goals: IGoal[] }) {
       <Accordion
         title={" ADICIONAR VENDA"}
         content={
-          <div className="flex w-full flex-col gap-2 rounded-md bg-[#353535] p-3">
+          <div className="flex w-full flex-col gap-2 rounded-md bg-gray-800 p-3">
             <Input
               label="Vendas de hoje"
               value={sales}
@@ -55,8 +55,12 @@ export default function DailySalesArea({ goals }: { goals: IGoal[] }) {
           </div>
         }
       />
-
-      <DailySalesList dailyList={dailySales} goals={goals} />
+      <div className="rounded-md bg-gray-800 p-2">
+        <h1 className="p-2 text-white">Vendas</h1>
+        <div className="max-h-[58vh] w-full overflow-hidden overflow-y-scroll rounded-sm bg-gray-800">
+          <DailySalesList dailyList={dailySales} goals={goals} />
+        </div>
+      </div>
     </div>
   ));
 }

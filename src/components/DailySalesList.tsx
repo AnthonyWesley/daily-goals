@@ -58,53 +58,44 @@ export default function DailySalesList({
   ];
 
   return (
-    <div>
-      <div className="rounded-sm bg-[#3c6e71] p-2 text-white">
-        VENDAS DIÁRIAS
-      </div>
-      <div className="max-h-[58vh] w-full overflow-hidden overflow-y-scroll rounded-md">
-        <table className="h-full w-full rounded-md border border-gray-300 bg-white">
-          <thead>
-            <tr>
-              <th className="border-b-2 border-gray-300 bg-[#3c6e71] px-6 py-3 text-left text-base font-medium uppercase tracking-wider text-white">
-                Dia
-              </th>
-              <th className="border-b-2 border-gray-300 bg-[#3c6e71] px-6 py-3 text-left text-base font-medium uppercase tracking-wider text-white">
-                Valor
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {dailyList?.map((sale, index) => (
-              <tr
-                key={sale.id}
-                className={` ${index % 2 === 0 ? "bg-neutral-100" : "bg-neutral-200"}`}
-              >
-                <td className="border-b border-gray-200 p-4 text-lg">
-                  <EditableInput
-                    // options={options(sale.id ?? "", sale.goalId)}
-                    initialValue={(sale.day as Date).toLocaleDateString(
-                      "pt-BR",
-                    )}
-                    disabled={true}
-                    className="w-28 lg:w-40"
-                  />
-                </td>
-                <td className="border-b border-gray-200 text-lg">
-                  <EditableInput
-                    options={options(sale.id ?? "", sale.goalId)}
-                    initialValue={toCurrency(sale.sales)}
-                    onChange={(i) => handleDailySalesChange(i, sale)}
-                    disabled={!isEditing[sale.id ?? ""]}
-                    className="w-full px-4"
-                    isCurrency
-                  />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <table className="h-full w-full overflow-hidden overflow-y-scroll rounded-md bg-white">
+      <thead>
+        <tr>
+          <th className="border-b-2 bg-gray-700 p-4 text-left text-base font-medium uppercase tracking-wider text-white">
+            Dia
+          </th>
+          <th className="border-b-2 bg-gray-700 p-4 text-left text-base font-medium uppercase tracking-wider text-white">
+            Valor
+          </th>
+        </tr>
+      </thead>
+      <tbody className="">
+        {dailyList?.map((sale, index) => (
+          <tr
+            key={sale.id}
+            className={` ${index % 2 === 0 ? "bg-neutral-50" : "bg-neutral-200"}`}
+          >
+            <td className="border-b border-gray-200 p-3 text-lg">
+              <EditableInput
+                // options={options(sale.id ?? "", sale.goalId)}
+                initialValue={(sale.day as Date).toLocaleDateString("pt-BR")}
+                disabled={true}
+                className="w-28 lg:w-40"
+              />
+            </td>
+            <td className="border-b border-gray-200 text-lg">
+              <EditableInput
+                options={options(sale.id ?? "", sale.goalId)}
+                initialValue={toCurrency(sale.sales)}
+                onChange={(i) => handleDailySalesChange(i, sale)}
+                disabled={!isEditing[sale.id ?? ""]}
+                className="w-full px-4"
+                isCurrency
+              />
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
   );
 }
