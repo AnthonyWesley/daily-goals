@@ -24,7 +24,7 @@ export default function Dropdown({
   };
 
   return (
-    <div className="select relative z-40 min-w-40 cursor-pointer text-base text-white duration-500">
+    <div className="select relative z-40 min-w-40 cursor-pointer text-white duration-500 lg:text-base">
       <div className="selected relative flex items-center justify-between rounded-md bg-[#3c6e71] p-2">
         <span className="ml-2">{selectedOption}</span>
         <svg

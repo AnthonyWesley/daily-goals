@@ -25,9 +25,9 @@ export default function App() {
   }, [option]);
   return (
     <div className="min-h-screen text-gray-900">
-      <header className="bg-gray-800 py-4 text-white">
+      <header className="bg-gray-800 p-3 text-white">
         <div className="container mx-auto flex items-center justify-between">
-          <h1 className="p-4 text-xl font-bold">GERENCIADOR DE METAS</h1>
+          <h1 className="font-bold lg:text-xl">GERENCIADOR DE METAS</h1>
           <Dropdown
             dropdownList={goals.map((g) => g.name)}
             dropdownSelect={dropdownSelect}
