@@ -5,6 +5,8 @@ import Dropdown from "./components/ui/Dropdown";
 import { useGoalApiContext } from "./context/GoalApiContext";
 import Spin from "./components/ui/Spin";
 import { useDailySalesContext } from "./context/DailySalesContext";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function App() {
   const [option, setOption] = useState("");
@@ -36,6 +38,7 @@ export default function App() {
         <GoalsArea goals={goals.filter((g) => g.name === option)} />
         <DailySalesArea goals={goals.filter((g) => g.name === option)} />
       </div>
+      <ToastContainer />
     </div>
   );
 }

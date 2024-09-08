@@ -4,6 +4,7 @@ import { useDailySalesContext } from "../context/DailySalesContext";
 import { useGoalApiContext } from "../context/GoalApiContext";
 import { parseCurrency, toCurrency } from "../helpers/CurrencyFormatter";
 import EditableInput from "./ui/EditableInput";
+import { toast } from "react-toastify";
 
 export default function GoalsList({ goals }: { goals: IGoal[] }) {
   const { updateGoal, deleteGoal } = useGoalApiContext();
@@ -32,12 +33,14 @@ export default function GoalsList({ goals }: { goals: IGoal[] }) {
   const handleEdit = () => {
     if (updatedListRef.current) {
       updateGoal(updatedListRef.current.id ?? "", updatedListRef.current);
+      toast.success(`Meta editada com sucesso!`);
     }
   };
 
   const handleDelete = async () => {
     const goalsId = goals[0].id;
     if (goalsId) await deleteGoal(goalsId);
+    toast.success(`Meta deletada com sucesso!`);
   };
 
   const options = [

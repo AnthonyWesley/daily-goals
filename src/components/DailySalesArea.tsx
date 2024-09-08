@@ -6,6 +6,7 @@ import { useDailySalesContext } from "../context/DailySalesContext";
 import { IGoal } from "../api.ts/GoalApi";
 import { formatISO } from "date-fns";
 import Accordion from "./ui/Accordion";
+import { toast } from "react-toastify";
 
 export default function DailySalesArea({ goals }: { goals: IGoal[] }) {
   const [sales, setSales] = useState("");
@@ -29,6 +30,7 @@ export default function DailySalesArea({ goals }: { goals: IGoal[] }) {
       setSales("");
 
       await getAllDailySales(id);
+      toast.success(`Venda adicionada com sucesso!`);
     }
   };
 

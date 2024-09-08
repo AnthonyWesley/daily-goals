@@ -4,6 +4,7 @@ import { useDailySalesContext } from "../context/DailySalesContext";
 import { useRef, useState } from "react";
 import { IGoal } from "../api.ts/GoalApi";
 import EditableInput from "./ui/EditableInput";
+import { toast } from "react-toastify";
 
 export default function DailySalesList({
   dailyList,
@@ -28,12 +29,14 @@ export default function DailySalesList({
     const dailyList = updatedListRef.current;
     if (dailyList) {
       await updateDaySales(dailyList.id ?? "", dailyList);
+      toast.success(`Venda editada com sucesso!`);
     }
     setIsEditing((prev) => ({ ...prev, [id]: false }));
   };
 
   const handleDelete = async (id: string, goalId: string) => {
     if (goalId) await deleteDaySales(id, goalId);
+    toast.success(`Venda deletada com sucesso!`);
   };
 
   const toggleEdit = (id: string) => {

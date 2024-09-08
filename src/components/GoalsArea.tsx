@@ -5,6 +5,7 @@ import GoalsList from "./GoalsList";
 import Input from "./ui/Input";
 import { IGoal } from "../api.ts/GoalApi";
 import Accordion from "./ui/Accordion";
+import { toast } from "react-toastify";
 
 export default function GoalsArea({ goals }: { goals: IGoal[] }) {
   const [name, setName] = useState("");
@@ -25,16 +26,20 @@ export default function GoalsArea({ goals }: { goals: IGoal[] }) {
   };
 
   const addGoal = async () => {
-    if (monthlyGoal && workingDays && name) {
-      await createGoal({
-        name,
-        monthlyGoal: toNumber(monthlyGoal),
-        workingDays: toNumber(workingDays),
-      });
-      setMonthlyGoal("");
-      setWorkingDays("");
-      setName("");
+    if (!monthlyGoal && !workingDays && !name) {
+      toast.error("Nome, meta ou dias invalidos!");
+
+      return;
     }
+    await createGoal({
+      name,
+      monthlyGoal: toNumber(monthlyGoal),
+      workingDays: toNumber(workingDays),
+    });
+    setMonthlyGoal("");
+    setWorkingDays("");
+    setName("");
+    toast.success(`Meta ${name} criada com sucesso!`);
   };
 
   return (
