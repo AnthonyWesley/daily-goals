@@ -42,11 +42,10 @@ export default function DailySalesArea({ goals }: { goals: IGoal[] }) {
               label="Vendas de hoje"
               value={sales}
               onChange={handleSalesChange}
-              className="lg:w-3/4"
             />
 
             <button
-              className="col-span-2 rounded-md bg-[#3c6e71] py-2 text-[#ffffff] lg:w-96"
+              className="rounded-md bg-[#3c6e71] py-2 text-[#ffffff]"
               onClick={() => addDailySales(goal.id ?? "")}
             >
               ADD
