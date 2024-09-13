@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import FingerprintJS from "@fingerprintjs/fingerprintjs";
 export interface IGoal {
   id?: string;
   name: string;
@@ -22,6 +22,14 @@ export const instanceGoal = axios.create({
 export class GoalApi {
   async getUserIp(): Promise<string> {
     try {
+      const fpPromise = FingerprintJS.load();
+
+      fpPromise
+        .then((fp) => fp.get())
+        .then((result) => {
+          const visitorId = result.visitorId;
+          console.log(visitorId);
+        });
       const response = await axios.get("https://api.ipify.org?format=json");
 
       if (response.status !== 200) {
@@ -45,9 +53,9 @@ export class GoalApi {
   async createUserIp() {
     try {
       const storedIp = localStorage.getItem("userIp");
-
+      const getUserIp = await this.getUserIp();
       const userIp = await this.getUserIp();
-      if (!storedIp) {
+      if (!storedIp || storedIp != getUserIp) {
         const response = await instanceGoal.post(
           "https://daily-goals-api.vercel.app/user/write",
           {
