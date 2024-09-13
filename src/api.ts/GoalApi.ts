@@ -20,46 +20,41 @@ export const instanceGoal = axios.create({
 });
 
 export class GoalApi {
-  async getUserIp(): Promise<string> {
+  async getUserDeviceId(): Promise<string> {
     try {
-      const fpPromise = FingerprintJS.load();
+      const fpPromise = await FingerprintJS.load();
 
-      fpPromise
-        .then((fp) => fp.get())
-        .then((result) => {
-          const visitorId = result.visitorId;
-          console.log(visitorId);
-        });
-      const response = await axios.get("https://api.ipify.org?format=json");
+      const fpResult = await fpPromise.get();
+      const deviceId = fpResult.visitorId;
 
-      if (response.status !== 200) {
-        throw new Error("Failed to fetch user IP");
+      if (!deviceId) {
+        throw new Error("Failed to fetch device ID");
       }
 
-      const fetchedIp = response.data.ip;
-      const storedIp = localStorage.getItem("userIp");
+      const storedDeviceId = localStorage.getItem("userDeviceId");
 
-      if (!storedIp || storedIp !== fetchedIp) {
-        localStorage.setItem("userIp", fetchedIp);
+      if (!storedDeviceId || storedDeviceId !== deviceId) {
+        localStorage.setItem("userDeviceId", deviceId);
       }
 
-      return fetchedIp;
+      return deviceId;
     } catch (error) {
-      console.error("Error fetching user IP:", error);
+      console.error("Error fetching device ID:", error);
       throw error;
     }
   }
 
   async createUserIp() {
     try {
-      const storedIp = localStorage.getItem("userIp");
-      const getUserIp = await this.getUserIp();
-      const userIp = await this.getUserIp();
+      const storedIp = localStorage.getItem("userDeviceId");
+      const getUserIp = await this.getUserDeviceId();
+
       if (!storedIp || storedIp != getUserIp) {
         const response = await instanceGoal.post(
           "https://daily-goals-api.vercel.app/user/write",
           {
-            headers: { "X-User-IP": userIp },
+            // headers: { "X-User-IP": getUserIp },
+            headers: { Authorization: storedIp },
           },
         );
 
@@ -77,14 +72,16 @@ export class GoalApi {
 
   async list(): Promise<IGoal[]> {
     try {
-      const userIp = await this.getUserIp();
+      const userIp = await this.getUserDeviceId();
       const response = await instanceGoal.get("/", {
-        headers: { "X-User-IP": userIp },
+        headers: { Authorization: userIp },
       });
 
       if (response.status !== 200) {
         throw new Error("Failed to fetch goals");
       }
+      console.log(userIp);
+
       return response.data;
     } catch (error) {
       console.error("Error fetching goals:", error);
@@ -94,11 +91,11 @@ export class GoalApi {
 
   async write(goal: IGoal): Promise<IGoal> {
     try {
-      const userIp = await this.getUserIp();
+      const userIp = await this.getUserDeviceId();
       console.log(userIp);
 
       const response = await instanceGoal.post("/write", goal, {
-        headers: { "X-User-IP": userIp },
+        headers: { Authorization: userIp },
       });
       if (response.status !== 201) {
         throw new Error("Failed to create goal");
@@ -114,9 +111,9 @@ export class GoalApi {
 
   async delete(id: string): Promise<boolean> {
     try {
-      const userIp = await this.getUserIp();
+      const userIp = await this.getUserDeviceId();
       const response = await instanceGoal.delete(`/${id}/delete`, {
-        headers: { "X-User-IP": userIp },
+        headers: { Authorization: userIp },
       });
       if (response.status !== 204) {
         throw new Error("Failed to delete goal");
@@ -130,9 +127,9 @@ export class GoalApi {
 
   async update(id: string, goal: IGoal): Promise<IGoal> {
     try {
-      const userIp = await this.getUserIp();
+      const userIp = await this.getUserDeviceId();
       const response = await instanceGoal.put(`/${id}/change`, goal, {
-        headers: { "X-User-IP": userIp },
+        headers: { Authorization: userIp },
       });
       if (response.status !== 200) {
         throw new Error("Failed to update goal");

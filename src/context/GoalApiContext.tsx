@@ -23,7 +23,8 @@ export default function GoalApiProvider({
   const [goals, setGoals] = useState<IGoal[]>([]);
   const [loadingGoalApi, setLoadingGoalApi] = useState(false);
   const getUserIp = async () => {
-    const data = await goalApi.createUserIp();
+    const data = await goalApi.getUserDeviceId();
+    console.log(data);
 
     if (data) {
       setIp(data);
@@ -31,6 +32,8 @@ export default function GoalApiProvider({
   };
   const getAllGoals = async () => {
     const data = await goalApi.list();
+    console.log(data);
+
     if (data) {
       setGoals(data);
     }
