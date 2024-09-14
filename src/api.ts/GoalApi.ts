@@ -15,7 +15,7 @@ export interface IGoalUpdate {
 }
 
 export const instanceGoal = axios.create({
-  baseURL: "http://localhost:3001/goal",
+  baseURL: "https://daily-goals-api.vercel.app/goal",
   headers: { "X-Custom-Header": "foobar" },
 });
 
@@ -31,7 +31,7 @@ export class GoalApi {
         throw new Error("Failed to fetch device ID");
       }
 
-      await instanceGoal.post("http://localhost:3001/user/write", {
+      await instanceGoal.post("https://daily-goals-api.vercel.app/user/write", {
         deviceId,
       });
       console.log(fpResult.visitorId);
